@@ -1,6 +1,6 @@
 // ============================================================
 //  pages/Admin/index.jsx — Dashboard privado
-//  Protegido por Clerk — solo accede si hay sesión activa
+//  JVSoftware — Protocolo 4.2 (Admin Edition)
 // ============================================================
 
 import { useState } from 'react';
@@ -18,21 +18,22 @@ export default function Admin() {
     const { isLoaded, isSignedIn } = useAuth();
     const [activeTab, setActiveTab] = useState('leads');
 
-    // Mientras Clerk carga
+    // Estado de carga optimizado
     if (!isLoaded) {
         return (
             <div className={styles.loading} role="status" aria-live="polite">
                 <div className={styles.spinner} aria-hidden="true" />
-                <p>Verificando acceso…</p>
+                <p className={styles.loadingText}>Verificando credenciales de JVSoftware…</p>
             </div>
         );
     }
 
-    // Si no hay sesión activa (no debería llegar aquí si App.jsx usa <RedirectToSignIn>)
+    // Seguridad: Acceso denegado
     if (!isSignedIn) {
         return (
             <div className={styles.denied} role="alert">
-                <p>Acceso denegado. <a href="/sign-in">Inicia sesión</a>.</p>
+                <div className={styles.deniedIcon}>🔒</div>
+                <p>Acceso restringido. <a href="/sign-in">Inicia sesión</a> para continuar.</p>
             </div>
         );
     }
@@ -40,28 +41,45 @@ export default function Admin() {
     return (
         <div className={styles.admin}>
 
-            {/* Header del admin */}
+            {/* Header Superior — Branding JVSoftware */}
             <header className={styles.header}>
                 <div className={`container ${styles.headerInner}`}>
                     <div className={styles.brand}>
-                        <span className={styles.logoMark} aria-hidden="true">JV</span>
-                        <div>
-                            <p className={styles.brandName}>JVSoftware</p>
-                            <p className={styles.brandSub}>Panel de administración</p>
+                        <div className={styles.logoWrapper}>
+                            <img 
+                                src="/logo.png" 
+                                alt="Logo" 
+                                className={styles.logoImg} 
+                            />
+                        </div>
+                        <div className={styles.brandInfo}>
+                            <h1 className={styles.brandName}>JVSoftware</h1>
+                            <p className={styles.brandSub}>Panel de Control Maestro</p>
                         </div>
                     </div>
-                    <UserButton afterSignOutUrl="/" />
+                    
+                    <div className={styles.userArea}>
+                        <UserButton 
+                            afterSignOutUrl="/"
+                            appearance={{
+                                elements: {
+                                    userButtonAvatarBox: styles.clerkAvatar
+                                }
+                            }}
+                        />
+                    </div>
                 </div>
             </header>
 
-            {/* Navegación de tabs */}
-            <nav className={styles.tabs} aria-label="Secciones del admin">
+            {/* Barra de Navegación de Secciones (Tabs) */}
+            <nav className={styles.tabs} aria-label="Secciones administrativas">
                 <div className="container">
                     <div className={styles.tabList} role="tablist">
                         {TABS.map(({ id, label }) => (
                             <button
                                 key={id}
                                 role="tab"
+                                id={`tab-${id}`}
                                 aria-selected={activeTab === id}
                                 aria-controls={`panel-${id}`}
                                 className={`${styles.tab} ${activeTab === id ? styles.tabActive : ''}`}
@@ -74,7 +92,7 @@ export default function Admin() {
                 </div>
             </nav>
 
-            {/* Contenido */}
+            {/* Contenido Principal con Renderizado Condicional */}
             <main className={styles.content}>
                 <div className="container">
 
@@ -82,6 +100,7 @@ export default function Admin() {
                         id="panel-leads"
                         role="tabpanel"
                         aria-labelledby="tab-leads"
+                        className={styles.panelFade}
                         hidden={activeTab !== 'leads'}
                     >
                         {activeTab === 'leads' && <LeadsTable />}
@@ -91,6 +110,7 @@ export default function Admin() {
                         id="panel-portfolio"
                         role="tabpanel"
                         aria-labelledby="tab-portfolio"
+                        className={styles.panelFade}
                         hidden={activeTab !== 'portfolio'}
                     >
                         {activeTab === 'portfolio' && <ProjectForm />}
