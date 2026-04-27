@@ -16,19 +16,10 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Cuando el menú está abierto, el header sube al z-index de overlay
-   y crea un nuevo stacking context para que .mobileMenu
-   quede POR ENCIMA de los links desktop */
-.isMenuOpen {
-    z-index: var(--z-overlay);
-}
-
 .inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: relative;
-    z-index: 3; /* sobre el .mobileMenu (z-index: 1) → logo y burger visibles */
 }
 
 .actions {
@@ -128,7 +119,7 @@
 .burgerOpen span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
 .burgerOpen span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-/* ── Menú móvil ── */
+/* ── Menú móvil — renderizado en document.body via portal ── */
 .mobileMenu {
     position: fixed;
     inset: 0;
@@ -136,14 +127,14 @@
     padding: var(--space-24) var(--space-6) var(--space-8);
     display: flex;
     flex-direction: column;
-    clip-path: circle(0% at 90% 5%);
+    clip-path: circle(0% at calc(100% - 36px) 36px);
     transition: clip-path 0.6s var(--ease-out-expo);
     pointer-events: none;
-    z-index: 2; /* dentro del contexto .isMenuOpen — bajo el .inner */
+    z-index: var(--z-modal); /* 400 — encima de absolutamente todo */
 }
 
 .mobileMenuOpen {
-    clip-path: circle(150% at 90% 5%);
+    clip-path: circle(150% at calc(100% - 36px) 36px);
     pointer-events: all;
 }
 
@@ -172,6 +163,7 @@
     width: 100%;
     font-size: var(--text-lg);
     padding: var(--space-4);
+    text-align: center;
 }
 
 /* ── Responsive ── */
