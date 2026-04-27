@@ -1,6 +1,6 @@
 // ============================================================
 //  Contact.jsx — Formulario de contacto
-//  POST a /api/leads — opciones orientadas al negocio
+//  JVSoftware — Protocolo 4.2 (Business Oriented)
 // ============================================================
 
 import { useState } from 'react';
@@ -36,7 +36,6 @@ export default function Contact() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm(prev => ({ ...prev, [name]: value }));
-        // Limpiar error del campo al escribir
         if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
     };
 
@@ -51,6 +50,7 @@ export default function Contact() {
         setStatus('loading');
 
         try {
+            // Captura de procedencia para analítica de JVSoftware
             const fuente =
                 new URLSearchParams(window.location.search).get('utm_source') ||
                 document.referrer ||
@@ -79,7 +79,7 @@ export default function Contact() {
             <div className="container">
                 <div className={styles.inner}>
 
-                    {/* Columna izquierda — info */}
+                    {/* Columna izquierda — Propuesta de Valor */}
                     <div className={styles.info}>
                         <span className="badge badge--accent">Hablemos</span>
                         <h2 className={styles.title}>
@@ -87,20 +87,21 @@ export default function Contact() {
                             <span className={styles.titleAccent}>tu negocio</span>
                         </h2>
                         <p className={styles.subtitle}>
-                            Primera consulta gratis. Sin compromisos, sin contratos largos.
-                            Te respondemos en menos de 48 horas con un plan concreto.
+                            Primera consulta gratis. Sin compromisos ni jerga técnica.
+                            Te respondemos en menos de 48 horas con una propuesta clara.
                         </p>
 
                         <ul className={styles.benefits} role="list">
                             {[
-                                'Sin jerga técnica — hablamos como personas',
-                                'Cotización clara y sin sorpresas',
-                                'Soporte incluido después de la entrega',
-                                'Pagos flexibles adaptados a tu flujo',
+                                'Sin jerga técnica — hablamos tu mismo idioma',
+                                'Cotización clara y sin costos ocultos',
+                                'Soporte post-entrega garantizado',
+                                'Pagos flexibles según el avance',
                             ].map((b, i) => (
                                 <li key={i} className={styles.benefit}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                        <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="10" fill="var(--color-accent-soft)" />
+                                        <path d="M8 12l3 3 5-5" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                     {b}
                                 </li>
@@ -108,16 +109,17 @@ export default function Contact() {
                         </ul>
                     </div>
 
-                    {/* Columna derecha — formulario */}
+                    {/* Columna derecha — Formulario */}
                     <div className={styles.formWrap}>
                         {status === 'success' ? (
                             <div className={styles.successState} role="status">
                                 <div className={styles.successIcon} aria-hidden="true">✓</div>
-                                <h3>¡Mensaje recibido!</h3>
-                                <p>Te contactaremos en menos de 48 horas. Revisa tu bandeja de entrada.</p>
+                                <h3>¡Mensaje enviado con éxito!</h3>
+                                <p>Estamos analizando tu caso. Joshua se pondrá en contacto contigo muy pronto.</p>
                                 <button
                                     className="btn btn--outline"
                                     onClick={() => setStatus('idle')}
+                                    style={{ marginTop: 'var(--space-4)' }}
                                 >
                                     Enviar otro mensaje
                                 </button>
@@ -129,66 +131,46 @@ export default function Contact() {
                                 noValidate
                                 aria-label="Formulario de contacto"
                             >
-                                <h3 className={styles.formTitle}>Envíanos un mensaje</h3>
+                                <h3 className={styles.formTitle}>Inicia tu proyecto</h3>
 
-                                {/* Nombre */}
                                 <div className={`${styles.field} ${errors.nombre ? styles.fieldError : ''}`}>
-                                    <label htmlFor="nombre" className={styles.label}>
-                                        Tu nombre
-                                    </label>
+                                    <label htmlFor="nombre" className={styles.label}>Tu nombre</label>
                                     <input
                                         id="nombre"
                                         name="nombre"
                                         type="text"
                                         value={form.nombre}
                                         onChange={handleChange}
-                                        placeholder="¿Cómo te llamas?"
+                                        placeholder="Ej. Juan Pérez"
                                         className={styles.input}
                                         autoComplete="name"
-                                        aria-describedby={errors.nombre ? 'nombre-error' : undefined}
                                     />
-                                    {errors.nombre && (
-                                        <span id="nombre-error" className={styles.errorMsg} role="alert">
-                                            {errors.nombre}
-                                        </span>
-                                    )}
+                                    {errors.nombre && <span className={styles.errorMsg}>{errors.nombre}</span>}
                                 </div>
 
-                                {/* Email */}
                                 <div className={`${styles.field} ${errors.email ? styles.fieldError : ''}`}>
-                                    <label htmlFor="email" className={styles.label}>
-                                        Tu email
-                                    </label>
+                                    <label htmlFor="email" className={styles.label}>Email de contacto</label>
                                     <input
                                         id="email"
                                         name="email"
                                         type="email"
                                         value={form.email}
                                         onChange={handleChange}
-                                        placeholder="correo@tunegocio.com"
+                                        placeholder="correo@empresa.com"
                                         className={styles.input}
                                         autoComplete="email"
-                                        aria-describedby={errors.email ? 'email-error' : undefined}
                                     />
-                                    {errors.email && (
-                                        <span id="email-error" className={styles.errorMsg} role="alert">
-                                            {errors.email}
-                                        </span>
-                                    )}
+                                    {errors.email && <span className={styles.errorMsg}>{errors.email}</span>}
                                 </div>
 
-                                {/* Tipo de problema */}
                                 <div className={`${styles.field} ${errors.tipo_problema ? styles.fieldError : ''}`}>
-                                    <label htmlFor="tipo_problema" className={styles.label}>
-                                        ¿Qué necesitas?
-                                    </label>
+                                    <label htmlFor="tipo_problema" className={styles.label}>¿Qué solución buscas?</label>
                                     <select
                                         id="tipo_problema"
                                         name="tipo_problema"
                                         value={form.tipo_problema}
                                         onChange={handleChange}
                                         className={styles.select}
-                                        aria-describedby={errors.tipo_problema ? 'tipo-error' : undefined}
                                     >
                                         {TIPOS_PROBLEMA.map(({ value, label }) => (
                                             <option key={value} value={value} disabled={value === ''}>
@@ -196,50 +178,39 @@ export default function Contact() {
                                             </option>
                                         ))}
                                     </select>
-                                    {errors.tipo_problema && (
-                                        <span id="tipo-error" className={styles.errorMsg} role="alert">
-                                            {errors.tipo_problema}
-                                        </span>
-                                    )}
+                                    {errors.tipo_problema && <span className={styles.errorMsg}>{errors.tipo_problema}</span>}
                                 </div>
 
-                                {/* Mensaje */}
                                 <div className={styles.field}>
                                     <label htmlFor="mensaje" className={styles.label}>
-                                        Cuéntanos más <span className={styles.optional}>(opcional)</span>
+                                        Detalles adicionales <span className={styles.optional}>(opcional)</span>
                                     </label>
                                     <textarea
                                         id="mensaje"
                                         name="mensaje"
                                         value={form.mensaje}
                                         onChange={handleChange}
-                                        placeholder="Describe brevemente tu negocio y lo que quieres lograr..."
+                                        placeholder="Cuéntanos un poco sobre tu negocio..."
                                         className={styles.textarea}
                                         rows={4}
                                     />
                                 </div>
 
-                                {/* Error global */}
                                 {status === 'error' && (
-                                    <p className={styles.globalError} role="alert">
-                                        {errMsg || 'Ocurrió un error. Intenta de nuevo.'}
-                                    </p>
+                                    <div className={styles.globalError}>
+                                        {errMsg || 'Error de conexión. Inténtalo de nuevo.'}
+                                    </div>
                                 )}
 
-                                {/* Submit */}
                                 <button
                                     type="submit"
                                     className={`btn btn--primary ${styles.submitBtn}`}
                                     disabled={status === 'loading'}
-                                    aria-busy={status === 'loading'}
                                 >
                                     {status === 'loading' ? (
-                                        <>
-                                            <span className={styles.spinner} aria-hidden="true" />
-                                            Enviando…
-                                        </>
+                                        <><span className={styles.spinner} /> Enviando propuesta...</>
                                     ) : (
-                                        'Enviar mensaje →'
+                                        'Solicitar Consulta Gratis →'
                                     )}
                                 </button>
                             </form>
