@@ -1,4 +1,16 @@
-const { neon } = require('@neondatabase/serverless');
+// ============================================================
+//  /api/projects/[id].js
+//  Vercel Serverless Function — Operaciones por ID
+//  PUT    → edita un proyecto (requiere auth Clerk)
+//  DELETE → desactiva un proyecto (requiere auth Clerk)
+// ============================================================
+
+import { neon } from '@neondatabase/serverless';
+import { createClerkClient } from '@clerk/backend';
+
+// ──────────────────────────────────────────────────────────────
+//  Utilidades
+// ──────────────────────────────────────────────────────────────
 
 function getDb() {
     if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL no definida.');
@@ -6,17 +18,22 @@ function getDb() {
 }
 
 async function verificarClerk(req) {
-    const authHeader = req.headers['authorization'];
-    if (!authHeader?.startsWith('Bearer ')) return false;
-    const token = authHeader.split(' ')[1];
     try {
-        const r = await fetch('https://api.clerk.com/v1/tokens/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.CLERK_SECRET_KEY}` },
-            body: JSON.stringify({ token }),
+        const authHeader = req.headers['authorization'];
+        if (!authHeader?.startsWith('Bearer ')) return false;
+
+        const token = authHeader.split(' ')[1];
+
+        const clerk = createClerkClient({
+            secretKey: process.env.CLERK_SECRET_KEY,
         });
-        return r.ok;
-    } catch { return false; }
+
+        const payload = await clerk.verifyToken(token);
+        return !!payload?.sub;
+    } catch (err) {
+        console.error('[verificarClerk] Token inválido:', err.message);
+        return false;
+    }
 }
 
 function setCorsHeaders(res) {
@@ -25,7 +42,11 @@ function setCorsHeaders(res) {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
-module.exports = async function handler(req, res) {
+// ──────────────────────────────────────────────────────────────
+//  Handler principal
+// ──────────────────────────────────────────────────────────────
+
+export default async function handler(req, res) {
     setCorsHeaders(res);
     if (req.method === 'OPTIONS') return res.status(200).end();
 
@@ -38,39 +59,62 @@ module.exports = async function handler(req, res) {
     try {
         if (req.method === 'PUT')    return await handlePut(req, res, id);
         if (req.method === 'DELETE') return await handleDelete(req, res, id);
+
         return res.status(405).json({ error: 'Método no permitido.' });
     } catch (error) {
-        console.error(`[/api/projects/${id}] Error:`, error.message);
-        return res.status(500).json({ error: 'Error interno.' });
+        console.error(`[/api/projects/${id}] Error:`, error.message, '| Code:', error.code);
+        return res.status(500).json({ error: 'Error interno.', detalle: error.message });
     }
-};
+}
+
+// ──────────────────────────────────────────────────────────────
+//  PUT — Editar proyecto
+// ──────────────────────────────────────────────────────────────
 
 async function handlePut(req, res, id) {
     const { titulo, descripcion_corta, problema_resuelto, url_imagen, tecnologias, orden, activo } = req.body;
+
     const sql = getDb();
 
     const [updated] = await sql`
         UPDATE projects SET
-            titulo            = COALESCE(${titulo}, titulo),
-            descripcion_corta = COALESCE(${descripcion_corta}, descripcion_corta),
-            problema_resuelto = COALESCE(${problema_resuelto}, problema_resuelto),
-            url_imagen        = COALESCE(${url_imagen}, url_imagen),
-            tecnologias       = COALESCE(${tecnologias}, tecnologias),
-            orden             = COALESCE(${orden}, orden),
-            activo            = COALESCE(${activo}, activo)
+            titulo            = COALESCE(${titulo            ?? null}, titulo),
+            descripcion_corta = COALESCE(${descripcion_corta ?? null}, descripcion_corta),
+            problema_resuelto = COALESCE(${problema_resuelto ?? null}, problema_resuelto),
+            url_imagen        = COALESCE(${url_imagen        ?? null}, url_imagen),
+            tecnologias       = COALESCE(${tecnologias       ?? null}, tecnologias),
+            orden             = COALESCE(${orden             ?? null}, orden),
+            activo            = COALESCE(${activo            ?? null}, activo)
         WHERE id = ${id}
         RETURNING id, titulo
     `;
 
     if (!updated) return res.status(404).json({ error: 'Proyecto no encontrado.' });
-    return res.status(200).json({ success: true, message: `Proyecto "${updated.titulo}" actualizado.`, data: updated });
+
+    return res.status(200).json({
+        success: true,
+        message: `Proyecto "${updated.titulo}" actualizado.`,
+        data: updated,
+    });
 }
+
+// ──────────────────────────────────────────────────────────────
+//  DELETE — Soft delete (activo = FALSE)
+// ──────────────────────────────────────────────────────────────
 
 async function handleDelete(req, res, id) {
     const sql = getDb();
+
     const [deleted] = await sql`
-        UPDATE projects SET activo = FALSE WHERE id = ${id} RETURNING id, titulo
+        UPDATE projects SET activo = FALSE
+        WHERE id = ${id}
+        RETURNING id, titulo
     `;
+
     if (!deleted) return res.status(404).json({ error: 'Proyecto no encontrado.' });
-    return res.status(200).json({ success: true, message: `Proyecto "${deleted.titulo}" eliminado.` });
+
+    return res.status(200).json({
+        success: true,
+        message: `Proyecto "${deleted.titulo}" eliminado.`,
+    });
 }

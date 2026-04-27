@@ -1,29 +1,45 @@
 // ============================================================
 //  /api/leads/index.js
 //  Vercel Serverless Function — Formulario de contacto
-//  POST → guarda un lead nuevo (público, sin auth)
-//  GET  → lista los leads entrantes (requiere auth Clerk)
+//  POST  → guarda un lead nuevo (público, sin auth)
+//  GET   → lista los leads entrantes (requiere auth Clerk)
+//  PATCH → marca lead como leído (requiere auth Clerk)
 // ============================================================
 
 import { neon } from '@neondatabase/serverless';
+import { createClerkClient } from '@clerk/backend';
+
+// ──────────────────────────────────────────────────────────────
+//  Utilidades
+// ──────────────────────────────────────────────────────────────
 
 function getDb() {
     if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL no definida.');
     return neon(process.env.DATABASE_URL);
 }
 
+/**
+ * Verifica el token JWT de Clerk correctamente usando el SDK oficial.
+ * El endpoint REST `v1/tokens/verify` no existe — esto lo reemplaza.
+ */
 async function verificarClerk(req) {
-    const authHeader = req.headers['authorization'];
-    if (!authHeader?.startsWith('Bearer ')) return false;
-    const token = authHeader.split(' ')[1];
     try {
-        const r = await fetch('https://api.clerk.com/v1/tokens/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.CLERK_SECRET_KEY}` },
-            body: JSON.stringify({ token }),
+        const authHeader = req.headers['authorization'];
+        if (!authHeader?.startsWith('Bearer ')) return false;
+
+        const token = authHeader.split(' ')[1];
+
+        const clerk = createClerkClient({
+            secretKey: process.env.CLERK_SECRET_KEY,
         });
-        return r.ok;
-    } catch { return false; }
+
+        // verifyToken valida el JWT localmente sin llamada REST extra
+        const payload = await clerk.verifyToken(token);
+        return !!payload?.sub;
+    } catch (err) {
+        console.error('[verificarClerk] Token inválido:', err.message);
+        return false;
+    }
 }
 
 function setCorsHeaders(res) {
@@ -32,13 +48,16 @@ function setCorsHeaders(res) {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
-// Validación básica anti-spam: bloquear emails muy cortos o mensajes vacíos
 function validarLead({ nombre, email, tipo_problema }) {
     if (!nombre || nombre.trim().length < 2)          return 'El nombre es requerido.';
     if (!email  || !email.includes('@'))               return 'El email no es válido.';
     if (!tipo_problema || tipo_problema.trim() === '') return 'Selecciona el tipo de problema.';
     return null;
 }
+
+// ──────────────────────────────────────────────────────────────
+//  Handler principal
+// ──────────────────────────────────────────────────────────────
 
 export default async function handler(req, res) {
     setCorsHeaders(res);
@@ -51,7 +70,7 @@ export default async function handler(req, res) {
 
         return res.status(405).json({ error: 'Método no permitido.' });
     } catch (error) {
-        console.error('[/api/leads] Error:', error.message);
+        console.error('[/api/leads] Error inesperado:', error.message);
         return res.status(500).json({ error: 'Error interno. Intenta de nuevo.' });
     }
 }
@@ -66,7 +85,6 @@ async function handlePost(req, res) {
     const error = validarLead({ nombre, email, tipo_problema });
     if (error) return res.status(400).json({ error });
 
-    // Captura automática de fuente si el frontend la envía (UTM / referrer)
     const fuenteFinal = fuente || req.headers['referer'] || 'directa';
 
     const sql = getDb();
@@ -114,16 +132,16 @@ async function handleGet(req, res) {
         OFFSET ${offset}
     `;
 
-    const [{ total }] = await sql`SELECT COUNT(*) AS total FROM leads`;
+    const [{ total }]    = await sql`SELECT COUNT(*) AS total FROM leads`;
     const [{ sin_leer }] = await sql`SELECT COUNT(*) AS sin_leer FROM leads WHERE leido = FALSE`;
 
     return res.status(200).json({
         success: true,
         data: leads,
         meta: {
-            total: parseInt(total),
-            sin_leer: parseInt(sin_leer),
-            pagina: parseInt(pagina),
+            total:      parseInt(total),
+            sin_leer:   parseInt(sin_leer),
+            pagina:     parseInt(pagina),
             por_pagina: parseInt(por_pagina),
         },
     });
