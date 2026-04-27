@@ -1,10 +1,15 @@
 .navbar {
     position: fixed;
     top: 0; left: 0; right: 0;
-    z-index: var(--z-sticky);
+    z-index: var(--z-sticky);       /* 200 — normal */
     padding-block: var(--space-4);
     transition: all var(--transition-base);
     border-bottom: 1px solid transparent;
+}
+
+/* Cuando el menú está abierto, el header sube por encima del portal (z-modal = 400) */
+.menuAbove {
+    z-index: calc(var(--z-modal) + 1); /* 401 — sobre el mobileMenu */
 }
 
 .scrolled {
@@ -119,7 +124,7 @@
 .burgerOpen span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
 .burgerOpen span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-/* ── Menú móvil — renderizado en document.body via portal ── */
+/* ── Menú móvil — portal en document.body ── */
 .mobileMenu {
     position: fixed;
     inset: 0;
@@ -130,7 +135,7 @@
     clip-path: circle(0% at calc(100% - 36px) 36px);
     transition: clip-path 0.6s var(--ease-out-expo);
     pointer-events: none;
-    z-index: var(--z-modal); /* 400 — encima de absolutamente todo */
+    z-index: var(--z-modal); /* 400 */
 }
 
 .mobileMenuOpen {

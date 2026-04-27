@@ -10,9 +10,9 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
-    const [scrolled, setScrolled]   = useState(false);
-    const [menuOpen, setMenuOpen]   = useState(false);
-    const location                  = useLocation();
+    const [scrolled, setScrolled] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const location = useLocation();
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20);
@@ -41,7 +41,6 @@ export default function Navbar() {
         }
     };
 
-    /* Menú móvil renderizado directamente en <body> via portal */
     const mobileMenu = createPortal(
         <div
             className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`}
@@ -77,10 +76,10 @@ export default function Navbar() {
 
     return (
         <>
-            <header className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
+            {/* menuAbove sube el header POR ENCIMA del portal cuando el menú está abierto */}
+            <header className={`${styles.navbar} ${scrolled ? styles.scrolled : ''} ${menuOpen ? styles.menuAbove : ''}`}>
                 <nav className={`${styles.inner} container`} aria-label="Navegación principal">
 
-                    {/* Logo */}
                     <Link to="/" className={styles.logo} aria-label="JVSoftware — inicio">
                         <div className={styles.logoWrapper}>
                             <img
@@ -95,7 +94,6 @@ export default function Navbar() {
                         <span className={styles.logoText}>JVSoftware</span>
                     </Link>
 
-                    {/* Links desktop */}
                     <ul className={styles.links} role="list">
                         {NAV_LINKS.map(({ label, href }) => (
                             <li key={href}>
@@ -110,7 +108,6 @@ export default function Navbar() {
                         ))}
                     </ul>
 
-                    {/* CTA desktop + Hamburguesa */}
                     <div className={styles.actions}>
                         <a
                             href="#contacto"
@@ -134,7 +131,6 @@ export default function Navbar() {
                 </nav>
             </header>
 
-            {/* Portal — menú móvil montado en document.body */}
             {mobileMenu}
         </>
     );
