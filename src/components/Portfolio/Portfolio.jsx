@@ -1,5 +1,5 @@
 // ============================================================
-//  Portfolio.jsx — Portafolio dinámico
+//  Portfolio.jsx — Portafolio dinámico mejorado
 //  Fetch desde /api/projects — datos reales desde Neon
 // ============================================================
 
@@ -7,11 +7,18 @@ import { useState, useEffect } from 'react';
 import styles from './Portfolio.module.css';
 
 function ProjectCard({ project }) {
-    const { titulo, descripcion_corta, problema_resuelto, url_imagen, tecnologias } = project;
+    // Desestructuración con valores por defecto para evitar errores de renderizado
+    const { 
+        titulo = "Proyecto", 
+        descripcion_corta = "", 
+        problema_resuelto = "", 
+        url_imagen = "", 
+        tecnologias = [] 
+    } = project;
 
     return (
         <article className={styles.card}>
-            {/* Imagen */}
+            {/* Imagen con Overlay mejorado */}
             <div className={styles.imageWrap}>
                 <img
                     src={url_imagen}
@@ -19,7 +26,7 @@ function ProjectCard({ project }) {
                     className={styles.image}
                     loading="lazy"
                     onError={(e) => {
-                        e.target.src = `https://placehold.co/600x360/EFEBE4/25D366?text=${encodeURIComponent(titulo)}`;
+                        e.target.src = `https://placehold.co/600x360/1a1a1a/25D366?text=${encodeURIComponent(titulo)}`;
                     }}
                 />
                 <div className={styles.imageOverlay} aria-hidden="true" />
@@ -30,21 +37,23 @@ function ProjectCard({ project }) {
                 <h3 className={styles.cardTitle}>{titulo}</h3>
                 <p className={styles.cardDesc}>{descripcion_corta}</p>
 
-                {/* Problema → Solución */}
+                {/* Problema → Solución (Truncado inteligente) */}
                 <div className={styles.problem}>
                     <span className={styles.problemLabel}>Problema resuelto</span>
                     <p className={styles.problemText}>
                         {problema_resuelto.length > 140
-                            ? problema_resuelto.slice(0, 140) + '…'
+                            ? problema_resuelto.slice(0, 140) + '...'
                             : problema_resuelto
                         }
                     </p>
                 </div>
 
-                {/* Tecnologías como tags */}
+                {/* Tecnologías con diseño premium */}
                 <div className={styles.tags} role="list" aria-label="Tecnologías usadas">
                     {tecnologias.map((tech) => (
-                        <span key={tech} className={styles.tag} role="listitem">{tech}</span>
+                        <span key={tech} className={styles.tag} role="listitem">
+                            {tech}
+                        </span>
                     ))}
                 </div>
             </div>
@@ -67,8 +76,8 @@ function SkeletonCard() {
 
 export default function Portfolio() {
     const [projects, setProjects] = useState([]);
-    const [loading,  setLoading]  = useState(true);
-    const [error,    setError]    = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -77,8 +86,11 @@ export default function Portfolio() {
             try {
                 const res = await fetch('/api/projects', { signal: controller.signal });
                 if (!res.ok) throw new Error(`Error ${res.status}`);
-                const { data } = await res.json();
-                setProjects(data);
+                
+                const result = await res.json();
+                // Mejora: Validación de que los datos vengan en el formato esperado
+                const dataArray = Array.isArray(result) ? result : result.data;
+                setProjects(dataArray || []);
             } catch (err) {
                 if (err.name !== 'AbortError') {
                     setError('No se pudieron cargar los proyectos. Intenta de nuevo.');
@@ -109,7 +121,7 @@ export default function Portfolio() {
                     </p>
                 </div>
 
-                {/* Estados */}
+                {/* Estados de la UI */}
                 {loading && (
                     <div className={styles.grid} aria-busy="true" aria-label="Cargando proyectos">
                         {[1, 2, 3, 4].map((i) => <SkeletonCard key={i} />)}
@@ -118,7 +130,7 @@ export default function Portfolio() {
 
                 {error && (
                     <div className={styles.errorState} role="alert">
-                        <span aria-hidden="true">⚠️</span>
+                        <span style={{ fontSize: '2rem' }}>⚠️</span>
                         <p>{error}</p>
                         <button
                             className="btn btn--outline"
