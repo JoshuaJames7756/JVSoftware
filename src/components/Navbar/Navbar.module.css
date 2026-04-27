@@ -9,19 +9,11 @@
 
 .scrolled {
     padding-block: var(--space-2);
-    background-color: rgba(248, 245, 240, 0.85); /* Crema con transparencia */
+    background-color: rgba(20, 20, 20, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: var(--shadow-sm);
-    border-bottom: 1px solid var(--color-border);
-}
-
-/* Soporte Dark Mode Automático para el scroll */
-@media (prefers-color-scheme: dark) {
-    .scrolled {
-        background-color: rgba(20, 20, 20, 0.85); /* Gris oscuro profundo */
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .inner {
@@ -132,13 +124,14 @@
 .mobileMenu {
     position: fixed;
     inset: 0;
-    background-color: var(--color-bg-primary);
+    background-color: #141414;  /* hardcodeado — no depende de variables para garantizar opacidad total */
     padding: var(--space-24) var(--space-6) var(--space-8);
     display: flex;
     flex-direction: column;
     clip-path: circle(0% at 90% 5%);
     transition: clip-path 0.6s var(--ease-out-expo);
     pointer-events: none;
+    z-index: var(--z-overlay);
 }
 
 .mobileMenuOpen {
@@ -178,7 +171,7 @@
     .links, .ctaDesktop { display: none; }
     .burger { display: flex; }
     .logoText { font-size: var(--text-base); }
-    
+
     .navbar {
         padding-block: var(--space-3);
     }
