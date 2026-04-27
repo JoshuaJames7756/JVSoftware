@@ -1,14 +1,14 @@
 // ============================================================
-//  ProjectForm.jsx — CRUD de portafolio para el admin
-//  Subida de imagen a Cloudinary (unsigned preset) + POST /api/projects
+//  ProjectForm.jsx — CRUD Maestro de Portafolio
+//  JVSoftware — Protocolo 4.2 (Full Stack Edition)
 // ============================================================
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import styles from './ProjectForm.module.css';
 
-const CLOUD_NAME     = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-const UPLOAD_PRESET  = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const CLOUD_NAME    = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 const EMPTY_FORM = {
     titulo: '', descripcion_corta: '', problema_resuelto: '',
@@ -20,27 +20,28 @@ export default function ProjectForm() {
 
     const [projects,  setProjects]  = useState([]);
     const [loading,   setLoading]   = useState(true);
-    const [form,      setForm]      = useState(EMPTY_FORM);
-    const [editId,    setEditId]    = useState(null);
+    const [form,       setForm]      = useState(EMPTY_FORM);
+    const [editId,     setEditId]    = useState(null);
     const [uploading, setUploading] = useState(false);
-    const [saving,    setSaving]    = useState(false);
-    const [msg,       setMsg]       = useState({ type: '', text: '' });
-    const [preview,   setPreview]   = useState('');
+    const [saving,     setSaving]    = useState(false);
+    const [msg,        setMsg]       = useState({ type: '', text: '' });
+    const [preview,    setPreview]   = useState('');
 
-    // ── Fetch proyectos ──────────────────────────────────────
     const fetchProjects = useCallback(async () => {
         setLoading(true);
         try {
             const res  = await fetch('/api/projects');
             const { data } = await res.json();
-            setProjects(data);
-        } catch { /* silencioso */ }
-        finally { setLoading(false); }
+            setProjects(data || []);
+        } catch (err) {
+            console.error("Error fetching projects:", err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     useEffect(() => { fetchProjects(); }, [fetchProjects]);
 
-    // ── Handlers de formulario ───────────────────────────────
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm(prev => ({ ...prev, [name]: value }));
@@ -50,7 +51,6 @@ export default function ProjectForm() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Validación rápida
         if (!file.type.startsWith('image/')) {
             setMsg({ type: 'error', text: 'Solo se permiten imágenes.' });
             return;
@@ -65,12 +65,12 @@ export default function ProjectForm() {
 
         try {
             const formData = new FormData();
-            formData.append('file',           file);
-            formData.append('upload_preset',  UPLOAD_PRESET);
-            formData.append('folder',         'portfolio');
+            formData.append('file', file);
+            formData.append('upload_preset', UPLOAD_PRESET);
+            formData.append('folder', 'portfolio');
             formData.append('transformation', 'w_800,h_450,c_fill,q_auto,f_webp');
 
-            const res  = await fetch(
+            const res = await fetch(
                 `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
                 { method: 'POST', body: formData }
             );
@@ -79,22 +79,21 @@ export default function ProjectForm() {
             if (data.secure_url) {
                 setForm(prev => ({ ...prev, url_imagen: data.secure_url }));
                 setPreview(data.secure_url);
-                setMsg({ type: 'success', text: 'Imagen subida correctamente.' });
+                setMsg({ type: 'success', text: 'Imagen optimizada y subida.' });
             } else {
-                throw new Error('Cloudinary no devolvió una URL.');
+                throw new Error('Error en la respuesta de Cloudinary.');
             }
         } catch (err) {
-            setMsg({ type: 'error', text: `Error al subir imagen: ${err.message}` });
+            setMsg({ type: 'error', text: `Fallo de subida: ${err.message}` });
         } finally {
             setUploading(false);
         }
     };
 
-    // ── Submit ───────────────────────────────────────────────
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!form.titulo || !form.descripcion_corta || !form.url_imagen) {
-            setMsg({ type: 'error', text: 'Título, descripción e imagen son requeridos.' });
+            setMsg({ type: 'error', text: 'Completa los campos obligatorios (*)' });
             return;
         }
 
@@ -105,29 +104,29 @@ export default function ProjectForm() {
             const token = await getToken();
             const payload = {
                 ...form,
-                tecnologias: form.tecnologias.split(',').map(t => t.trim()).filter(Boolean),
+                tecnologias: typeof form.tecnologias === 'string' 
+                    ? form.tecnologias.split(',').map(t => t.trim()).filter(Boolean)
+                    : form.tecnologias,
                 orden: parseInt(form.orden) || 0,
             };
 
             const url    = editId ? `/api/projects/${editId}` : '/api/projects';
             const method = editId ? 'PUT' : 'POST';
 
-            const res  = await fetch(url, {
+            const res = await fetch(url, {
                 method,
                 headers: {
-                    'Content-Type':  'application/json',
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(payload),
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.error);
+            if (!res.ok) throw new Error(data.error || 'Error al guardar');
 
-            setMsg({ type: 'success', text: data.message });
-            setForm(EMPTY_FORM);
-            setPreview('');
-            setEditId(null);
+            setMsg({ type: 'success', text: editId ? 'Proyecto actualizado' : 'Proyecto creado con éxito' });
+            cancelEdit();
             fetchProjects();
         } catch (err) {
             setMsg({ type: 'error', text: err.message });
@@ -136,15 +135,14 @@ export default function ProjectForm() {
         }
     };
 
-    // ── Editar ───────────────────────────────────────────────
     const handleEdit = (p) => {
         setForm({
-            titulo:            p.titulo,
+            titulo: p.titulo,
             descripcion_corta: p.descripcion_corta,
             problema_resuelto: p.problema_resuelto,
-            url_imagen:        p.url_imagen,
-            tecnologias:       p.tecnologias.join(', '),
-            orden:             p.orden,
+            url_imagen: p.url_imagen,
+            tecnologias: p.tecnologias.join(', '),
+            orden: p.orden,
         });
         setPreview(p.url_imagen);
         setEditId(p.id);
@@ -152,17 +150,18 @@ export default function ProjectForm() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // ── Eliminar (soft delete) ───────────────────────────────
     const handleDelete = async (id, titulo) => {
-        if (!window.confirm(`¿Eliminar "${titulo}" del portafolio?`)) return;
+        if (!window.confirm(`¿Estás seguro de eliminar "${titulo}"?`)) return;
         try {
             const token = await getToken();
-            await fetch(`/api/projects/${id}`, {
+            const res = await fetch(`/api/projects/${id}`, {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${token}` },
             });
-            fetchProjects();
-        } catch { /* silencioso */ }
+            if (res.ok) fetchProjects();
+        } catch (err) {
+            console.error("Error deleting:", err);
+        }
     };
 
     const cancelEdit = () => {
@@ -174,116 +173,98 @@ export default function ProjectForm() {
 
     return (
         <div className={styles.wrap}>
-            <h2 className={styles.title}>
-                {editId ? '✏️ Editar proyecto' : '➕ Agregar proyecto'}
-            </h2>
+            <header className={styles.formHeader}>
+                <h2 className={styles.title}>
+                    {editId ? '✏️ Editar Proyecto' : '➕ Nuevo Proyecto'}
+                </h2>
+                <p className={styles.subtitle}>Gestiona el portafolio de JVSoftware</p>
+            </header>
 
-            {/* Formulario */}
             <form onSubmit={handleSubmit} className={styles.form} noValidate>
-
-                <div className={styles.row}>
+                <div className={styles.grid2}>
                     <div className={styles.field}>
-                        <label className={styles.label} htmlFor="titulo">Título del proyecto *</label>
-                        <input id="titulo" name="titulo" type="text"
-                            value={form.titulo} onChange={handleChange}
-                            placeholder="Ej: Minimercado POS" className={styles.input} />
+                        <label className={styles.label}>Título del proyecto *</label>
+                        <input name="titulo" type="text" value={form.titulo} onChange={handleChange}
+                            placeholder="Nombre del software" className={styles.input} />
                     </div>
-                    <div className={styles.field} style={{ maxWidth: 120 }}>
-                        <label className={styles.label} htmlFor="orden">Orden</label>
-                        <input id="orden" name="orden" type="number" min={0}
-                            value={form.orden} onChange={handleChange} className={styles.input} />
+                    <div className={styles.field}>
+                        <label className={styles.label}>Prioridad (Orden)</label>
+                        <input name="orden" type="number" value={form.orden} onChange={handleChange} 
+                            className={styles.input} />
                     </div>
                 </div>
 
                 <div className={styles.field}>
-                    <label className={styles.label} htmlFor="descripcion_corta">Descripción corta *</label>
-                    <input id="descripcion_corta" name="descripcion_corta" type="text"
-                        value={form.descripcion_corta} onChange={handleChange}
-                        placeholder="Una línea que resume el proyecto" className={styles.input} />
+                    <label className={styles.label}>Descripción rápida *</label>
+                    <input name="descripcion_corta" type="text" value={form.descripcion_corta} onChange={handleChange}
+                        placeholder="Ej: Sistema de inventarios offline-first" className={styles.input} />
                 </div>
 
                 <div className={styles.field}>
-                    <label className={styles.label} htmlFor="problema_resuelto">Problema resuelto *</label>
-                    <textarea id="problema_resuelto" name="problema_resuelto"
-                        value={form.problema_resuelto} onChange={handleChange}
-                        placeholder="Describe el problema del cliente y cómo lo resolviste"
+                    <label className={styles.label}>Problema & Solución *</label>
+                    <textarea name="problema_resuelto" value={form.problema_resuelto} onChange={handleChange}
+                        placeholder="¿Qué reto enfrentaba el cliente y cómo lo resolviste?"
                         className={styles.textarea} rows={4} />
                 </div>
 
                 <div className={styles.field}>
-                    <label className={styles.label} htmlFor="tecnologias">
-                        Tecnologías <span className={styles.hint}>(separadas por coma)</span>
-                    </label>
-                    <input id="tecnologias" name="tecnologias" type="text"
-                        value={form.tecnologias} onChange={handleChange}
-                        placeholder="React, Vite, Neon, PostgreSQL" className={styles.input} />
+                    <label className={styles.label}>Tecnologías <span className={styles.hint}>(Comas)</span></label>
+                    <input name="tecnologias" type="text" value={form.tecnologias} onChange={handleChange}
+                        placeholder="React, Supabase, IndexedDB..." className={styles.input} />
                 </div>
 
-                {/* Subida de imagen */}
                 <div className={styles.field}>
-                    <label className={styles.label}>Imagen del proyecto *</label>
-                    <div className={styles.uploadWrap}>
-                        <label htmlFor="img-upload" className={styles.uploadBtn}>
-                            {uploading ? '⏳ Subiendo…' : '📎 Seleccionar imagen'}
-                            <input
-                                id="img-upload" type="file"
-                                accept="image/*" onChange={handleImageUpload}
-                                className={styles.fileInput}
-                                disabled={uploading}
-                            />
+                    <label className={styles.label}>Imagen destacada *</label>
+                    <div className={styles.uploadArea}>
+                        <label className={styles.uploadBtn}>
+                            {uploading ? '⏳ Procesando...' : '📷 Subir a Cloudinary'}
+                            <input type="file" accept="image/*" onChange={handleImageUpload} hidden disabled={uploading} />
                         </label>
-                        {form.url_imagen && (
-                            <span className={styles.urlPreview} title={form.url_imagen}>
-                                ✓ {form.url_imagen.split('/').pop()}
-                            </span>
-                        )}
+                        {preview && <img src={preview} alt="Preview" className={styles.previewImg} />}
                     </div>
-                    {preview && (
-                        <img src={preview} alt="Preview" className={styles.preview} />
-                    )}
                 </div>
 
-                {/* Feedback */}
                 {msg.text && (
-                    <p className={`${styles.msg} ${msg.type === 'error' ? styles.msgError : styles.msgSuccess}`} role="alert">
+                    <div className={`${styles.alert} ${msg.type === 'error' ? styles.alertError : styles.alertSuccess}`}>
                         {msg.text}
-                    </p>
+                    </div>
                 )}
 
-                {/* Acciones */}
-                <div className={styles.actions}>
-                    <button type="submit" className="btn btn--primary" disabled={saving || uploading}>
-                        {saving ? '⏳ Guardando…' : editId ? 'Actualizar proyecto' : 'Guardar proyecto'}
+                <div className={styles.formActions}>
+                    <button type="submit" className={styles.mainBtn} disabled={saving || uploading}>
+                        {saving ? 'Guardando...' : editId ? 'Actualizar Cambios' : 'Publicar Proyecto'}
                     </button>
                     {editId && (
-                        <button type="button" className="btn btn--outline" onClick={cancelEdit}>
+                        <button type="button" className={styles.cancelBtn} onClick={cancelEdit}>
                             Cancelar
                         </button>
                     )}
                 </div>
             </form>
 
-            {/* Lista de proyectos existentes */}
-            <div className={styles.projectList}>
-                <h3 className={styles.listTitle}>Proyectos en el portafolio ({projects.length})</h3>
+            <div className={styles.listSection}>
+                <h3 className={styles.listTitle}>Proyectos Activos ({projects.length})</h3>
                 {loading ? (
-                    <p className={styles.listLoading}>Cargando…</p>
-                ) : projects.length === 0 ? (
-                    <p className={styles.listEmpty}>No hay proyectos aún.</p>
+                    <div className={styles.skeletonGrid}>Cargando portafolio...</div>
                 ) : (
                     <div className={styles.listGrid}>
                         {projects.map((p) => (
                             <div key={p.id} className={styles.projectCard}>
-                                <img src={p.url_imagen} alt={p.titulo} className={styles.cardImg}
-                                    onError={e => { e.target.src = `https://placehold.co/300x180/EFEBE4/25D366?text=${encodeURIComponent(p.titulo)}`; }}
-                                />
-                                <div className={styles.cardInfo}>
-                                    <p className={styles.cardTitle}>{p.titulo}</p>
-                                    <p className={styles.cardDesc}>{p.descripcion_corta}</p>
+                                <div className={styles.cardMedia}>
+                                    <img src={p.url_imagen} alt={p.titulo} />
+                                    <div className={styles.orderBadge}>#{p.orden}</div>
+                                </div>
+                                <div className={styles.cardContent}>
+                                    <h4>{p.titulo}</h4>
+                                    <p>{p.descripcion_corta}</p>
                                 </div>
                                 <div className={styles.cardActions}>
-                                    <button className={styles.editBtn} onClick={() => handleEdit(p)}>✏️ Editar</button>
-                                    <button className={styles.deleteBtn} onClick={() => handleDelete(p.id, p.titulo)}>🗑 Eliminar</button>
+                                    <button className={styles.editBtn} onClick={() => handleEdit(p)}>
+                                        Editar
+                                    </button>
+                                    <button className={styles.deleteBtn} onClick={() => handleDelete(p.id, p.titulo)}>
+                                        Eliminar
+                                    </button>
                                 </div>
                             </div>
                         ))}
