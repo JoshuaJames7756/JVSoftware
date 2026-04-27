@@ -1,0 +1,170 @@
+/* Navbar.module.css — logo PNG original */
+
+.navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: var(--z-sticky);
+    padding-block: var(--space-3);
+    transition: background var(--transition-base), box-shadow var(--transition-base);
+}
+
+.scrolled {
+    background-color: rgba(248, 245, 240, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 1px 0 var(--color-border), var(--shadow-sm);
+}
+
+.inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-8);
+}
+
+/* ── Logo ── */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.logoImg {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    display: block;
+    border-radius: 50%;
+    transition: transform var(--transition-spring);
+}
+
+.logo:hover .logoImg {
+    transform: scale(1.06);
+}
+
+.logoText {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+    letter-spacing: var(--tracking-tight);
+}
+
+/* ── Links desktop ── */
+.links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    list-style: none;
+    margin: 0; padding: 0;
+}
+
+.link {
+    display: block;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-md);
+    transition: color var(--transition-fast), background var(--transition-fast);
+    text-decoration: none;
+}
+
+.link:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-secondary);
+}
+
+/* ── CTA desktop ── */
+.ctaDesktop {
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-5);
+    flex-shrink: 0;
+}
+
+/* ── Hamburguesa ── */
+.burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 36px; height: 36px;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    background: none; border: none;
+    transition: background var(--transition-fast);
+}
+
+.burger:hover { background-color: var(--color-bg-secondary); }
+
+.burger span {
+    display: block; width: 100%; height: 1.5px;
+    background-color: var(--color-text-primary);
+    border-radius: var(--radius-full);
+    transition: transform var(--transition-base), opacity var(--transition-base);
+    transform-origin: center;
+}
+
+.burgerOpen span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.burgerOpen span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.burgerOpen span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ── Menú móvil ── */
+.mobileMenu {
+    position: fixed;
+    inset: 0; top: 68px;
+    background-color: var(--color-bg-primary);
+    z-index: calc(var(--z-sticky) - 1);
+    padding: var(--space-8) var(--section-padding-x);
+    display: flex;
+    flex-direction: column;
+    opacity: 0; transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity var(--transition-base), transform var(--transition-base);
+}
+
+.mobileMenuOpen {
+    opacity: 1; transform: translateY(0);
+    pointer-events: all;
+}
+
+.mobileLinks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    list-style: none; margin: 0; padding: 0;
+}
+
+.mobileLink {
+    display: block;
+    padding: var(--space-4);
+    font-size: var(--text-xl);
+    font-weight: var(--font-medium);
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: color var(--transition-fast), padding-left var(--transition-base);
+}
+
+.mobileLink:hover {
+    color: var(--color-accent);
+    padding-left: var(--space-6);
+}
+
+.mobileCta {
+    margin-top: var(--space-6);
+    width: 100%;
+    justify-content: center;
+    font-size: var(--text-base);
+    padding: var(--space-4);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .links, .ctaDesktop { display: none; }
+    .burger { display: flex; }
+    .logoImg { width: 40px; height: 40px; }
+    .logoText { font-size: var(--text-base); }
+}

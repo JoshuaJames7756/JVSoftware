@@ -1,0 +1,324 @@
+/* ============================================================
+   Hero.module.css — Estilos del componente Hero
+   JVSoftware — Protocolo 4.2
+   ============================================================ */
+
+/* ──────────────────────────────────────────────────────────
+   SECCIÓN BASE
+────────────────────────────────────────────────────────── */
+
+.hero {
+    position: relative;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: var(--space-32) var(--space-20);
+    overflow: hidden;
+}
+
+/* ──────────────────────────────────────────────────────────
+   FONDO DECORATIVO
+────────────────────────────────────────────────────────── */
+
+.bg {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-below);
+    pointer-events: none;
+}
+
+/* Grid de puntos sutil */
+.bgDots {
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle, rgba(26, 26, 26, 0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+
+/* Glow verde muy sutil en el extremo derecho */
+.bgGlow {
+    position: absolute;
+    top: -10%;
+    right: -15%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(37, 211, 102, 0.09) 0%, transparent 65%);
+    border-radius: 50%;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   CONTENIDO CENTRAL
+────────────────────────────────────────────────────────── */
+
+.content {
+    position: relative;
+    z-index: var(--z-base);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
+    max-width: 760px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BADGE
+────────────────────────────────────────────────────────── */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background-color: var(--color-accent-light);
+    border: 1px solid var(--color-border-accent);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-accent-dark);
+    letter-spacing: var(--tracking-normal);
+}
+
+.badgeDot {
+    width: 7px;
+    height: 7px;
+    background-color: var(--color-accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1;   transform: scale(1); }
+    50%       { opacity: 0.6; transform: scale(0.85); }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   TITULAR
+────────────────────────────────────────────────────────── */
+
+.heading {
+    font-size: clamp(var(--text-4xl), 5.5vw, var(--text-7xl));
+    font-weight: var(--font-bold);
+    line-height: 1.1;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text-primary);
+    max-width: 700px;
+}
+
+.headingAccent {
+    color: var(--color-accent);
+    position: relative;
+    display: inline-block;
+}
+
+/* Subrayado decorativo animado bajo el acento */
+.headingAccent::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--color-accent);
+    border-radius: var(--radius-full);
+    opacity: 0.35;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: underlineIn 0.8s var(--ease-out-expo) 0.6s both;
+}
+
+@keyframes underlineIn {
+    to { transform: scaleX(1); }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   SUBTÍTULO
+────────────────────────────────────────────────────────── */
+
+.subheading {
+    font-size: clamp(var(--text-lg), 2vw, var(--text-xl));
+    font-weight: var(--font-normal);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-secondary);
+    max-width: 600px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   SOCIAL PROOF
+────────────────────────────────────────────────────────── */
+
+.socialProof {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+}
+
+.proofItem {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.proofNumber {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    line-height: 1;
+    color: var(--color-text-primary);
+    letter-spacing: var(--tracking-tight);
+}
+
+.proofLabel {
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    color: var(--color-text-muted);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+
+.proofDivider {
+    width: 1px;
+    height: 36px;
+    background-color: var(--color-border);
+    flex-shrink: 0;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   CTAs
+────────────────────────────────────────────────────────── */
+
+.ctas {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.ctaPrimary {
+    font-size: var(--text-base);
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-full);
+}
+
+.ctaSecondary {
+    font-size: var(--text-base);
+    padding: var(--space-4) var(--space-6);
+    gap: var(--space-2);
+}
+
+.ctaSecondary svg {
+    transition: transform var(--transition-base);
+}
+
+.ctaSecondary:hover svg {
+    transform: translateX(4px);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   GARANTÍA
+────────────────────────────────────────────────────────── */
+
+.trust {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+.trust svg {
+    flex-shrink: 0;
+    color: var(--color-accent);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   SCROLL INDICATOR
+────────────────────────────────────────────────────────── */
+
+.scrollIndicator {
+    position: absolute;
+    bottom: var(--space-8);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 1s ease 1.5s both;
+}
+
+.scrollLine {
+    width: 1.5px;
+    height: 52px;
+    background: linear-gradient(
+        to bottom,
+        var(--color-accent),
+        transparent
+    );
+    border-radius: var(--radius-full);
+    animation: scrollPulse 2.4s ease-in-out infinite;
+    transform-origin: top;
+}
+
+@keyframes scrollPulse {
+    0%, 100% { transform: scaleY(1);   opacity: 0.6; }
+    50%       { transform: scaleY(0.5); opacity: 0.2; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   RESPONSIVE
+────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .hero {
+        padding-block: var(--space-24) var(--space-16);
+        min-height: auto;
+    }
+
+    .content {
+        gap: var(--space-6);
+    }
+
+    .socialProof {
+        gap: var(--space-4);
+    }
+
+    .proofDivider {
+        display: none;
+    }
+
+    .ctas {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .ctaPrimary,
+    .ctaSecondary {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .scrollIndicator {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .socialProof {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-4);
+    }
+}

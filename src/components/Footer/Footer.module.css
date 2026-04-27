@@ -1,0 +1,149 @@
+/* Footer.module.css */
+
+.footer {
+    background-color: var(--color-bg-dark);
+    padding-block: var(--space-16) var(--space-10);
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-10);
+    padding-bottom: var(--space-10);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    flex-wrap: wrap;
+}
+
+/* ── Marca ── */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.logoMark {
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+}
+
+.brandText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.brandName {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-on-dark);
+    letter-spacing: var(--tracking-tight);
+}
+
+.brandTagline {
+    font-size: var(--text-xs);
+    color: var(--color-text-on-dark-muted);
+}
+
+/* ── Links ── */
+.links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
+.link {
+    display: block;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-text-on-dark-muted);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.link:hover {
+    color: var(--color-text-on-dark);
+    background-color: rgba(255,255,255,0.06);
+}
+
+/* ── WhatsApp CTA ── */
+.whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    background-color: rgba(37, 211, 102, 0.12);
+    border: 1px solid rgba(37, 211, 102, 0.25);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    white-space: nowrap;
+}
+
+.whatsapp:hover {
+    background-color: var(--color-accent);
+    color: #fff;
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-accent);
+}
+
+/* ── Bottom ── */
+.bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-8);
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.copy,
+.credit {
+    font-size: var(--text-xs);
+    color: var(--color-text-on-dark-muted);
+    margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-8);
+    }
+
+    .links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .whatsapp {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .bottom {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+}
