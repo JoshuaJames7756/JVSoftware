@@ -1,8 +1,3 @@
-// ============================================================
-//  Navbar.jsx — con logo PNG original
-//  JVSoftware — Protocolo 4.2
-// ============================================================
-
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Navbar.module.css';
@@ -14,12 +9,12 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
-    const [scrolled,  setScrolled]  = useState(false);
-    const [menuOpen,  setMenuOpen]  = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 40);
+        const onScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
@@ -35,23 +30,36 @@ export default function Navbar() {
         e.preventDefault();
         setMenuOpen(false);
         const el = document.querySelector(href);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (el) {
+            const offset = 80; // Ajuste para que el scroll no tape el título
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = el.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
     };
 
     return (
-        <header className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
-            <nav className={`container ${styles.inner}`} aria-label="Navegación principal">
+        <header className={`${styles.navbar} ${scrolled ? styles.scrolled : ''} ${menuOpen ? styles.isMenuOpen : ''}`}>
+            <nav className={`${styles.inner} container`} aria-label="Navegación principal">
 
-                {/* Logo original PNG */}
+                {/* Logo */}
                 <Link to="/" className={styles.logo} aria-label="JVSoftware — inicio">
-                    <img
-                        src="/logo.png"
-                        alt="JVSoftware"
-                        className={styles.logoImg}
-                        height="48"
-                        width="48"
-                        loading="eager"
-                    />
+                    <div className={styles.logoWrapper}>
+                        <img
+                            src="/logo.png"
+                            alt="JVSoftware"
+                            className={styles.logoImg}
+                            height="48"
+                            width="48"
+                            loading="eager"
+                        />
+                    </div>
                     <span className={styles.logoText}>JVSoftware</span>
                 </Link>
 
@@ -71,23 +79,27 @@ export default function Navbar() {
                 </ul>
 
                 {/* CTA desktop */}
-                <a
-                    href="#contacto"
-                    className={`btn btn--primary ${styles.ctaDesktop}`}
-                    onClick={(e) => handleNavClick(e, '#contacto')}
-                >
-                    Hablemos
-                </a>
+                <div className={styles.actions}>
+                    <a
+                        href="#contacto"
+                        className={`btn btn--primary ${styles.ctaDesktop}`}
+                        onClick={(e) => handleNavClick(e, '#contacto')}
+                    >
+                        Hablemos
+                    </a>
 
-                {/* Hamburguesa móvil */}
-                <button
-                    className={`${styles.burger} ${menuOpen ? styles.burgerOpen : ''}`}
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-                    aria-expanded={menuOpen}
-                >
-                    <span /><span /><span />
-                </button>
+                    {/* Hamburguesa móvil */}
+                    <button
+                        className={`${styles.burger} ${menuOpen ? styles.burgerOpen : ''}`}
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+                        aria-expanded={menuOpen}
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
             </nav>
 
             {/* Menú móvil */}
@@ -96,8 +108,8 @@ export default function Navbar() {
                 aria-hidden={!menuOpen}
             >
                 <ul className={styles.mobileLinks} role="list">
-                    {NAV_LINKS.map(({ label, href }) => (
-                        <li key={href}>
+                    {NAV_LINKS.map(({ label, href }, index) => (
+                        <li key={href} style={{ transitionDelay: `${index * 50}ms` }}>
                             <a
                                 href={href}
                                 className={styles.mobileLink}
@@ -108,7 +120,7 @@ export default function Navbar() {
                             </a>
                         </li>
                     ))}
-                    <li>
+                    <li style={{ transitionDelay: `${NAV_LINKS.length * 50}ms` }}>
                         <a
                             href="#contacto"
                             className={`btn btn--primary ${styles.mobileCta}`}
