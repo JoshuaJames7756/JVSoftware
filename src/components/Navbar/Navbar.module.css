@@ -28,7 +28,7 @@
     align-items: center;
     justify-content: space-between;
     position: relative;
-    z-index: 2; /* sobre el .mobileMenu (z-index: 1) → logo y burger visibles */
+    z-index: 3; /* sobre el .mobileMenu (z-index: 1) → logo y burger visibles */
 }
 
 .actions {
@@ -139,7 +139,7 @@
     clip-path: circle(0% at 90% 5%);
     transition: clip-path 0.6s var(--ease-out-expo);
     pointer-events: none;
-    z-index: 1; /* dentro del contexto .isMenuOpen — bajo el .inner */
+    z-index: 2; /* dentro del contexto .isMenuOpen — bajo el .inner */
 }
 
 .mobileMenuOpen {
