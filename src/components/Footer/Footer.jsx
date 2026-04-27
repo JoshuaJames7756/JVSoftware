@@ -107,7 +107,7 @@ export default function Footer() {
 
                         {/* CTA WhatsApp con efecto premium */}
                         <a
-                            href="https://wa.me/1234567890?text=Hola%2C%20me%20interesa%20conocer%20sus%20servicios"
+                            href="https://wa.me/59174328155?text=Hola%2C%20me%20interesa%20conocer%20sus%20servicios"
                             target="_blank"
                             rel="noopener noreferrer"
                             className={styles.whatsapp}
