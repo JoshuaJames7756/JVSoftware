@@ -1,22 +1,50 @@
-const { neon } = require('@neondatabase/serverless');
+// ============================================================
+//  /api/projects/index.js
+//  Vercel Serverless Function — Portafolio
+//  GET  → lista proyectos activos (público)
+//  POST → crea nuevo proyecto (requiere autenticación Clerk)
+// ============================================================
+
+import { neon } from '@neondatabase/serverless';
+
+// ──────────────────────────────────────────────────────────────
+//  Helpers
+// ──────────────────────────────────────────────────────────────
 
 function getDb() {
-    if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL no definida.');
+    if (!process.env.DATABASE_URL) {
+        throw new Error('DATABASE_URL no está definida en las variables de entorno.');
+    }
     return neon(process.env.DATABASE_URL);
 }
 
+/**
+ * Verifica que la petición venga de un usuario autenticado con Clerk.
+ * Clerk envía el session token en el header Authorization: Bearer <token>
+ * Verificamos contra la API de Clerk para validar el token.
+ */
 async function verificarClerk(req) {
     const authHeader = req.headers['authorization'];
-    if (!authHeader?.startsWith('Bearer ')) return false;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return false;
+    }
+
     const token = authHeader.split(' ')[1];
+
     try {
-        const r = await fetch('https://api.clerk.com/v1/tokens/verify', {
+        const response = await fetch('https://api.clerk.com/v1/tokens/verify', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.CLERK_SECRET_KEY}` },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.CLERK_SECRET_KEY}`,
+            },
             body: JSON.stringify({ token }),
         });
-        return r.ok;
-    } catch { return false; }
+
+        return response.ok;
+    } catch {
+        return false;
+    }
 }
 
 function setCorsHeaders(res) {
@@ -25,51 +53,105 @@ function setCorsHeaders(res) {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
-module.exports = async function handler(req, res) {
+// ──────────────────────────────────────────────────────────────
+//  Handler principal
+// ──────────────────────────────────────────────────────────────
+
+export default async function handler(req, res) {
     setCorsHeaders(res);
-    if (req.method === 'OPTIONS') return res.status(200).end();
+
+    // Preflight CORS
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
 
     try {
-        if (req.method === 'GET')  return await handleGet(req, res);
-        if (req.method === 'POST') return await handlePost(req, res);
+        if (req.method === 'GET') {
+            return await handleGet(req, res);
+        }
+
+        if (req.method === 'POST') {
+            return await handlePost(req, res);
+        }
+
         return res.status(405).json({ error: 'Método no permitido.' });
+
     } catch (error) {
         console.error('[/api/projects] Error:', error.message);
         return res.status(500).json({ error: 'Error interno del servidor.' });
     }
-};
+}
+
+// ──────────────────────────────────────────────────────────────
+//  GET — Proyectos activos para el portafolio público
+// ──────────────────────────────────────────────────────────────
 
 async function handleGet(req, res) {
     const sql = getDb();
+
     const projects = await sql`
-        SELECT id, titulo, descripcion_corta, problema_resuelto, url_imagen, tecnologias, orden, fecha_creacion
+        SELECT
+            id,
+            titulo,
+            descripcion_corta,
+            problema_resuelto,
+            url_imagen,
+            tecnologias,
+            orden,
+            fecha_creacion
         FROM projects
         WHERE activo = TRUE
         ORDER BY orden ASC, fecha_creacion DESC
     `;
-    return res.status(200).json({ success: true, data: projects, total: projects.length });
+
+    return res.status(200).json({
+        success: true,
+        data: projects,
+        total: projects.length,
+    });
 }
+
+// ──────────────────────────────────────────────────────────────
+//  POST — Crear nuevo proyecto (solo admin autenticado)
+// ──────────────────────────────────────────────────────────────
 
 async function handlePost(req, res) {
     const autorizado = await verificarClerk(req);
-    if (!autorizado) return res.status(401).json({ error: 'No autorizado.' });
+    if (!autorizado) {
+        return res.status(401).json({ error: 'No autorizado. Inicia sesión en el panel admin.' });
+    }
 
     const { titulo, descripcion_corta, problema_resuelto, url_imagen, tecnologias, orden } = req.body;
 
+    // Validación básica
     if (!titulo || !descripcion_corta || !problema_resuelto || !url_imagen) {
-        return res.status(400).json({ error: 'Faltan campos requeridos.' });
+        return res.status(400).json({
+            error: 'Faltan campos requeridos: titulo, descripcion_corta, problema_resuelto, url_imagen.'
+        });
     }
 
     if (!Array.isArray(tecnologias) || tecnologias.length === 0) {
-        return res.status(400).json({ error: 'tecnologias debe ser un array.' });
+        return res.status(400).json({ error: 'tecnologias debe ser un array con al menos un elemento.' });
     }
 
     const sql = getDb();
+
     const [proyecto] = await sql`
         INSERT INTO projects (titulo, descripcion_corta, problema_resuelto, url_imagen, tecnologias, orden)
-        VALUES (${titulo}, ${descripcion_corta}, ${problema_resuelto}, ${url_imagen}, ${tecnologias}, ${orden ?? 0})
+        VALUES (
+            ${titulo},
+            ${descripcion_corta},
+            ${problema_resuelto},
+            ${url_imagen},
+            ${tecnologias},
+            ${orden ?? 0}
+        )
         RETURNING id, titulo, fecha_creacion
     `;
 
-    return res.status(201).json({ success: true, message: `Proyecto "${proyecto.titulo}" creado.`, data: proyecto });
+    return res.status(201).json({
+        success: true,
+        message: `Proyecto "${proyecto.titulo}" creado exitosamente.`,
+        data: proyecto,
+    });
 }
