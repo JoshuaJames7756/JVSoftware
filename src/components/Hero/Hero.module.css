@@ -22,7 +22,7 @@
 .bgDots {
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(circle, rgba(26, 26, 26, 0.05) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(240, 237, 230, 0.03) 1px, transparent 1px);
     background-size: 32px 32px;
     mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 100%);
 }
@@ -33,18 +33,9 @@
     right: -5%;
     width: 60vw;
     height: 60vw;
-    background: radial-gradient(circle, rgba(37, 211, 102, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(37, 211, 102, 0.06) 0%, transparent 70%);
     border-radius: 50%;
     filter: blur(60px);
-}
-
-@media (prefers-color-scheme: dark) {
-    .bgDots {
-        background-image: radial-gradient(circle, rgba(240, 237, 230, 0.03) 1px, transparent 1px);
-    }
-    .bgGlow {
-        background: radial-gradient(circle, rgba(37, 211, 102, 0.05) 0%, transparent 70%);
-    }
 }
 
 /* ──────────────────────────────────────────────────────────
@@ -89,8 +80,8 @@
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+    0%   { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); }
+    70%  { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
     100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }
 
@@ -168,6 +159,7 @@
 
 .ctas {
     display: flex;
+    flex-wrap: wrap;        /* permite que el segundo botón baje si no cabe */
     gap: var(--space-4);
     width: 100%;
 }
@@ -175,6 +167,7 @@
 .ctaPrimary {
     padding: var(--space-4) var(--space-10);
     font-weight: var(--font-bold);
+    flex-shrink: 0;
 }
 
 .ctaSecondary {
@@ -182,6 +175,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2);
+    flex-shrink: 0;
 }
 
 .trust {
@@ -193,61 +187,56 @@
 }
 
 /* ──────────────────────────────────────────────────────────
-   SCROLL INDICATOR — CORREGIDO
+   SCROLL INDICATOR
 ────────────────────────────────────────────────────────── */
 
 .scrollIndicator {
     position: absolute;
-    /* Cambiado de space-8 a un valor fijo pequeño para que 
-       siempre esté al borde inferior de la pantalla */
-    bottom: 1.5rem; 
+    bottom: 1.5rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
     z-index: var(--z-base);
-    pointer-events: none; /* Para que no estorbe si alguien hace click cerca */
+    pointer-events: none;
 }
 
 .scrollLine {
     width: 2px;
     height: 50px;
-    background: linear-gradient(
-        to bottom,
-        var(--color-accent),
-        transparent
-    );
+    background: linear-gradient(to bottom, var(--color-accent), transparent);
     border-radius: var(--radius-full);
     transform-origin: top;
     animation: scrollPulse 2.4s ease-in-out infinite;
 }
 
 @keyframes scrollPulse {
-    0%, 100% { 
-        transform: scaleY(1); 
-        opacity: 0.5; 
-    }
-    50% { 
-        transform: scaleY(0.4); 
-        opacity: 0.1; 
-    }
+    0%, 100% { transform: scaleY(1); opacity: 0.5; }
+    50%       { transform: scaleY(0.4); opacity: 0.1; }
 }
 
 /* ──────────────────────────────────────────────────────────
-   RESPONSIVE — AJUSTE DE ESPACIADO
+   RESPONSIVE
 ────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
     .hero {
-        /* Aumentamos el padding inferior en móvil para que el 
-           contenido nunca toque el indicador o el final */
-        padding-block: var(--space-24) var(--space-32);
-        min-height: 100dvh; 
-        justify-content: flex-start; /* Evita que se centre y tape el scroll */
+        padding-block: var(--space-24) var(--space-16);
+        min-height: 100dvh;
+        justify-content: flex-start;
     }
 
-    /* Ocultar scroll indicator en móviles muy pequeños para limpiar la UI */
+    .ctas {
+        flex-direction: column;  /* en móvil los botones van apilados */
+    }
+
+    .ctaPrimary,
+    .ctaSecondary {
+        width: 100%;             /* ocupan todo el ancho disponible */
+        justify-content: center;
+    }
+
     .scrollIndicator {
         display: none;
     }
