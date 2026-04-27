@@ -1,6 +1,7 @@
 // ============================================================
-//  Contact.jsx — Formulario de contacto
-//  JVSoftware — Protocolo 4.2 (Business Oriented)
+//   Contact.jsx — Formulario de contacto
+//   JVSoftware — Protocolo 4.2 (Business Oriented)
+//   Optimización: Dark Mode & Select UX
 // ============================================================
 
 import { useState } from 'react';
@@ -26,7 +27,7 @@ export default function Contact() {
 
     const validate = () => {
         const e = {};
-        if (!form.nombre.trim())        e.nombre        = 'Tu nombre es requerido.';
+        if (!form.nombre.trim())         e.nombre        = 'Tu nombre es requerido.';
         if (!form.email.trim() || !form.email.includes('@'))
                                         e.email         = 'Ingresa un email válido.';
         if (!form.tipo_problema)        e.tipo_problema = 'Selecciona una opción.';
@@ -100,8 +101,8 @@ export default function Contact() {
                             ].map((b, i) => (
                                 <li key={i} className={styles.benefit}>
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                        <circle cx="12" cy="12" r="10" fill="var(--color-accent-soft)" />
-                                        <path d="M8 12l3 3 5-5" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <circle cx="12" cy="12" r="10" fill="var(--color-accent-soft, #25D36622)" />
+                                        <path d="M8 12l3 3 5-5" stroke="var(--color-accent, #25D366)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                     {b}
                                 </li>

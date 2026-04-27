@@ -1,15 +1,15 @@
-/* Contact.module.css — JVSoftware UI */
+/* Contact.module.css — JVSoftware UI Optimizado */
 
 .contact {
-    background-color: var(--color-bg-dark);
-    padding-block: var(--space-20);
+    background-color: var(--color-bg-dark, #000);
+    padding-block: var(--space-20, 80px);
     overflow: hidden;
 }
 
 .inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-16);
+    gap: var(--space-16, 64px);
     align-items: start;
 }
 
@@ -17,13 +17,13 @@
 .info {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--space-6, 24px);
     position: sticky;
     top: 120px;
 }
 
 .title {
-    font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+    font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 800;
     color: #fff;
     line-height: 1.1;
@@ -31,14 +31,14 @@
 }
 
 .titleAccent { 
-    color: var(--color-accent);
-    background: linear-gradient(90deg, var(--color-accent), #fff);
+    color: var(--color-accent, #25D366);
+    background: linear-gradient(90deg, var(--color-accent, #25D366), #fff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
-    font-size: var(--text-lg);
+    font-size: 1.125rem;
     color: rgba(255, 255, 255, 0.6);
     max-width: 450px;
 }
@@ -46,18 +46,18 @@
 .benefits {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-4, 16px);
     list-style: none;
     padding: 0;
-    margin-top: var(--space-4);
+    margin-top: var(--space-4, 16px);
 }
 
 .benefit {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--space-4, 16px);
     color: rgba(255, 255, 255, 0.8);
-    font-size: var(--text-base);
+    font-size: 1rem;
 }
 
 .benefit svg {
@@ -69,33 +69,33 @@
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 2rem;
-    padding: var(--space-10);
+    padding: var(--space-10, 40px);
     box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
 }
 
 .formTitle {
-    font-size: var(--text-2xl);
+    font-size: 1.5rem;
     font-weight: 700;
     color: #fff;
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-8, 32px);
 }
 
 /* ── Form ── */
 .form {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--space-6, 24px);
 }
 
 .field {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-2, 8px);
 }
 
 .label {
-    font-size: var(--text-sm);
+    font-size: 0.875rem;
     font-weight: 600;
     color: #fff;
 }
@@ -108,28 +108,45 @@
 .input,
 .select,
 .textarea {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.4); /* Fondo más oscuro para contraste */
     border: 1.5px solid rgba(255, 255, 255, 0.1);
     border-radius: 1rem;
     padding: 1rem 1.25rem;
     color: #fff;
     font-size: 1rem;
     transition: all 0.3s ease;
+    width: 100%;
 }
 
 .input:focus,
 .select:focus,
 .textarea:focus {
     outline: none;
-    border-color: var(--color-accent);
+    border-color: var(--color-accent, #25D366);
     background: rgba(37, 211, 102, 0.05);
     box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.1);
 }
 
+/* --- SOLUCIÓN AL FONDO BLANCO DEL SELECT --- */
 .select {
     cursor: pointer;
     appearance: none;
-    background-image: url("data:image/svg+xml,..."); /* Icono de flecha */
+    /* Icono de flecha verde JV */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2325D366'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.25rem center;
+    background-size: 1.25rem;
+}
+
+/* Forzado de colores en las opciones para navegadores modernos */
+.select option {
+    background-color: #111;
+    color: #fff;
+    padding: 1rem;
+}
+
+.select option:disabled {
+    color: #555;
 }
 
 /* ── Errores ── */
@@ -162,13 +179,25 @@
     letter-spacing: 0.05em;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.75rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--color-accent, #25D366);
+    color: #000;
+    border-radius: 1rem;
+    border: none;
+    cursor: pointer;
 }
 
 .submitBtn:hover:not(:disabled) {
     transform: scale(1.02);
+    background-color: #2cfc7a;
     box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 /* ── Éxito ── */
@@ -177,19 +206,19 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: var(--space-8);
+    padding: var(--space-8, 32px);
 }
 
 .successIcon {
     width: 80px;
     height: 80px;
-    background: var(--color-accent);
+    background: var(--color-accent, #25D366);
     color: #000;
     border-radius: 50%;
     display: grid;
     place-items: center;
     font-size: 2rem;
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-6, 24px);
     box-shadow: 0 0 30px rgba(37, 211, 102, 0.4);
 }
 
@@ -206,6 +235,6 @@
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-    .inner { grid-template-columns: 1fr; gap: var(--space-12); }
+    .inner { grid-template-columns: 1fr; gap: var(--space-12, 48px); }
     .info { position: static; }
 }
