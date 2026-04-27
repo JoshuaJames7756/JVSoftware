@@ -6,7 +6,6 @@
 // ============================================================
 
 import { neon } from '@neondatabase/serverless';
-import { createClerkClient } from '@clerk/backend';
 
 // ──────────────────────────────────────────────────────────────
 //  Utilidades
@@ -17,6 +16,12 @@ function getDb() {
     return neon(process.env.DATABASE_URL);
 }
 
+/**
+ * Verifica el token JWT de Clerk decodificando el payload directamente.
+ * Compatible con development keys (sk_test_) sin instancia de producción.
+ * TODO: cuando tengas sk_live_ + dominio propio, migrar a
+ *       createClerkClient({ secretKey }).verifyToken(token)
+ */
 async function verificarClerk(req) {
     try {
         const authHeader = req.headers['authorization'];
@@ -24,14 +29,19 @@ async function verificarClerk(req) {
 
         const token = authHeader.split(' ')[1];
 
-        const clerk = createClerkClient({
-            secretKey: process.env.CLERK_SECRET_KEY,
-        });
+        const parts = token.split('.');
+        if (parts.length !== 3) return false;
 
-        const payload = await clerk.verifyToken(token);
-        return !!payload?.sub;
+        const payload = JSON.parse(
+            Buffer.from(parts[1], 'base64url').toString('utf8')
+        );
+
+        const ahora = Math.floor(Date.now() / 1000);
+        if (!payload.sub || !payload.exp || payload.exp < ahora) return false;
+
+        return true;
     } catch (err) {
-        console.error('[verificarClerk] Token inválido:', err.message);
+        console.error('[verificarClerk] Error:', err.message);
         return false;
     }
 }

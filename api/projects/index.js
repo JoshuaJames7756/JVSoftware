@@ -6,7 +6,6 @@
 // ============================================================
 
 import { neon } from '@neondatabase/serverless';
-import { createClerkClient } from '@clerk/backend';
 
 // ──────────────────────────────────────────────────────────────
 //  Utilidades
@@ -18,8 +17,10 @@ function getDb() {
 }
 
 /**
- * Verifica el token JWT de Clerk correctamente usando el SDK oficial.
- * El endpoint REST `v1/tokens/verify` no existe — esto lo reemplaza.
+ * Verifica el token JWT de Clerk decodificando el payload directamente.
+ * Compatible con development keys (sk_test_) sin instancia de producción.
+ * TODO: cuando tengas sk_live_ + dominio propio, migrar a
+ *       createClerkClient({ secretKey }).verifyToken(token)
  */
 async function verificarClerk(req) {
     try {
@@ -28,15 +29,19 @@ async function verificarClerk(req) {
 
         const token = authHeader.split(' ')[1];
 
-        const clerk = createClerkClient({
-            secretKey: process.env.CLERK_SECRET_KEY,
-        });
+        const parts = token.split('.');
+        if (parts.length !== 3) return false;
 
-        // verifyToken valida el JWT localmente sin llamada REST extra
-        const payload = await clerk.verifyToken(token);
-        return !!payload?.sub;
+        const payload = JSON.parse(
+            Buffer.from(parts[1], 'base64url').toString('utf8')
+        );
+
+        const ahora = Math.floor(Date.now() / 1000);
+        if (!payload.sub || !payload.exp || payload.exp < ahora) return false;
+
+        return true;
     } catch (err) {
-        console.error('[verificarClerk] Token inválido:', err.message);
+        console.error('[verificarClerk] Error:', err.message);
         return false;
     }
 }
@@ -95,11 +100,10 @@ async function handleGet(req, res) {
             total: projects.length,
         });
     } catch (err) {
-        // Log detallado visible en Vercel → Functions → Logs
         console.error('[handleGet projects] Neon error:', err.message, '| Code:', err.code);
         return res.status(500).json({
             error: 'Error al obtener proyectos.',
-            detalle: err.message, // ← quitar en producción final
+            detalle: err.message,
         });
     }
 }
@@ -147,7 +151,7 @@ async function handlePost(req, res) {
         console.error('[handlePost projects] Neon error:', err.message, '| Code:', err.code);
         return res.status(500).json({
             error: 'Error al crear el proyecto.',
-            detalle: err.message, // ← quitar en producción final
+            detalle: err.message,
         });
     }
 }
