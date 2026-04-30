@@ -5,7 +5,9 @@
     flex-direction: column;
     justify-content: center;
     padding-block: var(--space-32) var(--space-20);
-    overflow: hidden;
+    overflow: hidden; /* Mantiene el glow dentro de los límites */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* ──────────────────────────────────────────────────────────
@@ -49,8 +51,10 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-8);
+    width: 100%; /* Evita desbordes */
     max-width: 800px;
     animation: fadeInSlide 0.8s var(--ease-out-expo) both;
+    box-sizing: border-box;
 }
 
 @keyframes fadeInSlide {
@@ -130,8 +134,10 @@
 
 .socialProof {
     display: flex;
+    flex-wrap: wrap; /* Arreglo para móvil: permite que bajen si no caben */
     gap: var(--space-10);
     padding-block: var(--space-4);
+    width: 100%;
 }
 
 .proofItem {
@@ -159,7 +165,7 @@
 
 .ctas {
     display: flex;
-    flex-wrap: wrap;        /* permite que el segundo botón baje si no cabe */
+    flex-wrap: wrap;
     gap: var(--space-4);
     width: 100%;
 }
@@ -181,6 +187,7 @@
 .trust {
     display: flex;
     align-items: center;
+    flex-wrap: wrap; /* Para que el texto largo no desborde en pantallas muy pequeñas */
     gap: var(--space-2);
     font-size: var(--text-xs);
     color: var(--color-text-muted);
@@ -224,20 +231,38 @@
     .hero {
         padding-block: var(--space-24) var(--space-16);
         min-height: 100dvh;
-        justify-content: flex-start;
+        justify-content: center; /* Mejor centrado si el contenido es mucho */
+    }
+
+    .socialProof {
+        gap: var(--space-6); /* Menos espacio en móvil para evitar el desborde */
+    }
+
+    .proofDivider {
+        display: none; /* Quitamos los divisores verticales para que fluya mejor */
     }
 
     .ctas {
-        flex-direction: column;  /* en móvil los botones van apilados */
+        flex-direction: column;
     }
 
     .ctaPrimary,
     .ctaSecondary {
-        width: 100%;             /* ocupan todo el ancho disponible */
+        width: 100%;
         justify-content: center;
     }
 
     .scrollIndicator {
         display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .heading {
+        font-size: var(--text-4xl); /* Un poco más pequeño para teléfonos mini */
+    }
+    
+    .socialProof {
+        justify-content: flex-start;
     }
 }
