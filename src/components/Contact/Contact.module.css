@@ -4,6 +4,7 @@
     background-color: var(--color-bg-dark, #000);
     padding-block: var(--space-20, 80px);
     overflow: hidden;
+    width: 100%;
 }
 
 .inner {
@@ -11,6 +12,7 @@
     grid-template-columns: 1fr 1fr;
     gap: var(--space-16, 64px);
     align-items: start;
+    width: 100%;
 }
 
 /* ── Info ── */
@@ -54,14 +56,16 @@
 
 .benefit {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Ajustado para textos largos */
     gap: var(--space-4, 16px);
     color: rgba(255, 255, 255, 0.8);
     font-size: 1rem;
+    line-height: 1.4;
 }
 
 .benefit svg {
     flex-shrink: 0;
+    margin-top: 2px;
 }
 
 /* ── Form wrapper ── */
@@ -72,6 +76,8 @@
     padding: var(--space-10, 40px);
     box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
+    width: 100%;
+    box-sizing: border-box; /* Fundamental para evitar desbordes */
 }
 
 .formTitle {
@@ -86,12 +92,14 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-6, 24px);
+    width: 100%;
 }
 
 .field {
     display: flex;
     flex-direction: column;
     gap: var(--space-2, 8px);
+    width: 100%;
 }
 
 .label {
@@ -108,7 +116,7 @@
 .input,
 .select,
 .textarea {
-    background: rgba(0, 0, 0, 0.4); /* Fondo más oscuro para contraste */
+    background: rgba(0, 0, 0, 0.4);
     border: 1.5px solid rgba(255, 255, 255, 0.1);
     border-radius: 1rem;
     padding: 1rem 1.25rem;
@@ -116,6 +124,7 @@
     font-size: 1rem;
     transition: all 0.3s ease;
     width: 100%;
+    box-sizing: border-box; /* Evita que el padding sume al ancho */
 }
 
 .input:focus,
@@ -127,26 +136,19 @@
     box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.1);
 }
 
-/* --- SOLUCIÓN AL FONDO BLANCO DEL SELECT --- */
+/* --- SELECT UX --- */
 .select {
     cursor: pointer;
     appearance: none;
-    /* Icono de flecha verde JV */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2325D366'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1.25rem center;
     background-size: 1.25rem;
 }
 
-/* Forzado de colores en las opciones para navegadores modernos */
 .select option {
     background-color: #111;
     color: #fff;
-    padding: 1rem;
-}
-
-.select option:disabled {
-    color: #555;
 }
 
 /* ── Errores ── */
@@ -187,12 +189,12 @@
     border-radius: 1rem;
     border: none;
     cursor: pointer;
+    width: 100%;
 }
 
 .submitBtn:hover:not(:disabled) {
     transform: scale(1.02);
     background-color: #2cfc7a;
-    box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
 }
 
 .submitBtn:disabled {
@@ -206,26 +208,25 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: var(--space-8, 32px);
+    padding: var(--space-4);
 }
 
 .successIcon {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     background: var(--color-accent, #25D366);
     color: #000;
     border-radius: 50%;
     display: grid;
     place-items: center;
-    font-size: 2rem;
-    margin-bottom: var(--space-6, 24px);
-    box-shadow: 0 0 30px rgba(37, 211, 102, 0.4);
+    font-size: 1.5rem;
+    margin-bottom: var(--space-4);
 }
 
 .spinner {
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(0,0,0,0.1);
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(0,0,0,0.1);
     border-top-color: #000;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -234,7 +235,40 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Responsive ── */
+@media (max-width: 1024px) {
+    .inner {
+        gap: var(--space-10);
+    }
+}
+
 @media (max-width: 900px) {
-    .inner { grid-template-columns: 1fr; gap: var(--space-12, 48px); }
-    .info { position: static; }
+    .inner { 
+        grid-template-columns: 1fr; 
+        gap: var(--space-12); 
+    }
+    .info { 
+        position: static; 
+        text-align: center;
+        align-items: center;
+    }
+    .subtitle {
+        margin-inline: auto;
+    }
+    .benefits {
+        align-items: flex-start;
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .formWrap {
+        padding: var(--space-6) var(--space-4); /* Padding más pequeño en teléfonos */
+        border-radius: 1.5rem;
+    }
+    .title {
+        font-size: 2.25rem;
+    }
+    .submitBtn {
+        font-size: 0.875rem;
+    }
 }

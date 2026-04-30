@@ -27,9 +27,9 @@ export default function Contact() {
 
     const validate = () => {
         const e = {};
-        if (!form.nombre.trim())         e.nombre        = 'Tu nombre es requerido.';
+        if (!form.nombre.trim())         e.nombre         = 'Tu nombre es requerido.';
         if (!form.email.trim() || !form.email.includes('@'))
-                                        e.email         = 'Ingresa un email válido.';
+                                        e.email          = 'Ingresa un email válido.';
         if (!form.tipo_problema)        e.tipo_problema = 'Selecciona una opción.';
         return e;
     };
@@ -51,7 +51,6 @@ export default function Contact() {
         setStatus('loading');
 
         try {
-            // Captura de procedencia para analítica de JVSoftware
             const fuente =
                 new URLSearchParams(window.location.search).get('utm_source') ||
                 document.referrer ||
@@ -209,7 +208,7 @@ export default function Contact() {
                                     disabled={status === 'loading'}
                                 >
                                     {status === 'loading' ? (
-                                        <><span className={styles.spinner} /> Enviando propuesta...</>
+                                        <><span className={styles.spinner} /> Enviando...</>
                                     ) : (
                                         'Solicitar Consulta Gratis →'
                                     )}
