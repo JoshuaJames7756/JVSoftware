@@ -5,7 +5,7 @@
 
 /* Contenedor Principal */
 .wrap { 
-    padding: 2rem; 
+    padding: 2rem 1rem; /* Reducido un poco para móviles */
     color: #ffffff; 
     max-width: 1200px; 
     margin: 0 auto; 
@@ -14,7 +14,8 @@
 
 /* Encabezados */
 .formHeader {
-    margin-bottom: 2rem;
+    margin: 0 auto 2rem auto;
+    max-width: 800px; /* Alineado con el ancho del formulario */
     border-left: 4px solid #25D366;
     padding-left: 1rem;
 }
@@ -30,24 +31,26 @@
 .form {
     background: #111111;
     border: 1px solid #222222;
-    padding: 2rem;
+    padding: 2.5rem; /* Más aire interno */
     border-radius: 16px;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    margin-bottom: 4rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin: 0 auto 5rem auto; /* Centrado y con margen inferior */
+    max-width: 800px; /* Evita que se vea "apachurrado" o demasiado estirado */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
 }
 
 /* Grid para Título y Orden */
 .gridMain { 
     display: grid; 
-    grid-template-columns: 1fr 120px; 
+    grid-template-columns: 1fr 140px; /* Un poco más ancho para el número */
     gap: 1.5rem; 
 }
 
 @media (max-width: 600px) {
     .gridMain { grid-template-columns: 1fr; }
+    .form { padding: 1.5rem; }
 }
 
 /* Campos de entrada */
@@ -73,6 +76,7 @@
     color: #ffffff;
     font-size: 0.95rem;
     transition: all 0.3s ease;
+    width: 100%; /* Asegura que ocupen todo el ancho */
 }
 
 .input:focus, .textarea:focus {
@@ -82,7 +86,7 @@
 }
 
 .textarea { 
-    min-height: 100px; 
+    min-height: 120px; 
     resize: vertical; 
 }
 
@@ -106,6 +110,7 @@
     font-weight: 800; 
     font-size: 0.85rem;
     transition: transform 0.2s ease;
+    white-space: nowrap;
 }
 
 .fileLabel:hover { 
@@ -114,8 +119,8 @@
 }
 
 .miniPreview { 
-    height: 50px; 
-    width: 80px;
+    height: 60px; 
+    width: 100px;
     border-radius: 6px; 
     object-fit: cover; 
     border: 1px solid #333;
@@ -131,7 +136,7 @@
 .saveBtn { 
     background: #ffffff; 
     color: #000000; 
-    padding: 14px 28px; 
+    padding: 16px 28px; 
     border-radius: 10px; 
     font-weight: 800; 
     cursor: pointer; 
@@ -155,11 +160,6 @@
     transition: all 0.3s ease;
 }
 
-.cancelBtn:hover {
-    color: #fff;
-    border-color: #666;
-}
-
 /* --- SECCIÓN DE LISTADO (PORTAFOLIO) --- */
 .listContainer {
     border-top: 1px solid #222;
@@ -171,12 +171,16 @@
     font-size: 1.4rem; 
     font-weight: 700;
     color: #25D366; 
+    text-align: center; /* Centrado para balancear la vista */
 }
 
 .gridList { 
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
     gap: 2rem; 
+    justify-content: center; /* ESTO CENTRA LAS TARJETAS */
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
 /* Tarjetas de Proyecto */
@@ -188,6 +192,9 @@
     display: flex;
     flex-direction: column;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 400px; /* Límite para que no se estiren demasiado */
+    margin: 0 auto; /* Centrado dentro de su celda de grid */
+    width: 100%;
 }
 
 .card:hover { 
@@ -200,7 +207,7 @@
     position: relative; 
     width: 100%; 
     aspect-ratio: 16/9; 
-    background: #000000; /* Asegura que no se vea blanco si la imagen falla */
+    background: #000000; 
 }
 
 .cardImage img { 
@@ -271,32 +278,12 @@
     border: 1px solid #333;
 }
 
-.btnEdit:hover { 
-    background: #333333; 
-}
-
 .btnDelete { 
     background: rgba(255, 68, 68, 0.05); 
     color: #ff4444; 
     border: 1px solid rgba(255, 68, 68, 0.2);
 }
 
-.btnDelete:hover { 
-    background: #ff4444; 
-    color: #ffffff; 
-}
-
 /* Estados de Mensaje */
-.success { 
-    color: #25D366; 
-    font-size: 0.85rem; 
-    font-weight: 600;
-    text-align: center;
-}
-
-.error { 
-    color: #ff4444; 
-    font-size: 0.85rem; 
-    font-weight: 600;
-    text-align: center;
-}
+.success { color: #25D366; text-align: center; font-size: 0.9rem; margin-top: 1rem; font-weight: 600; }
+.error { color: #ff4444; text-align: center; font-size: 0.9rem; margin-top: 1rem; font-weight: 600; }

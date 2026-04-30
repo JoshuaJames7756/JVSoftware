@@ -97,7 +97,6 @@ export default function ProjectForm() {
                     ? form.tecnologias.split(',').map(t => t.trim()).filter(Boolean)
                     : form.tecnologias,
                 orden: parseInt(form.orden) || 0,
-                // Si no hay imagen, guardamos el placeholder por defecto
                 url_imagen: form.url_imagen || getPlaceholderUrl(form.titulo)
             };
 
