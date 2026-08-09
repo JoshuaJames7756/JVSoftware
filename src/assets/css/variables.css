@@ -1,5 +1,5 @@
 /* ============================================================
-   JVSoftware — Sistema de Diseño
+   XION TECHNOLOGY — Sistema de Diseño
    variables.css — Tokens globales de diseño (Protocolo 4.2)
    Importar en main.jsx ANTES de cualquier otro CSS
    ============================================================ */
@@ -9,16 +9,16 @@
 :root {
 
     /* ──────────────────────────────────────────────────────
-       PALETA CORPORATIVA JVSOFTWARE
+       PALETA CORPORATIVA XION TECHNOLOGY
        Identidad interna: Dark mode forzado como base
        (eliminado prefers-color-scheme — sitio siempre dark)
     ────────────────────────────────────────────────────── */
 
-    /* Fondos — DARK como identidad permanente */
-    --color-bg-primary:      #141414;
-    --color-bg-secondary:    #1C1C1C;
-    --color-bg-dark:         #0A0A0A;
-    --color-bg-dark-alt:     #111111;
+    /* Fondos — Forest Graphite como base */
+    --color-bg-primary:      #18251D;
+    --color-bg-secondary:    #1F2E24;
+    --color-bg-dark:         #0F1A11;
+    --color-bg-dark-alt:     #121D15;
     --color-bg-overlay:      rgba(0, 0, 0, 0.72);
 
     /* Texto — sobre fondos oscuros */
@@ -28,17 +28,17 @@
     --color-text-on-dark:    #F0EDE6;
     --color-text-on-dark-muted: #7A7672;
 
-    /* Acento principal — Verde vibrante */
-    --color-accent:          #25D366;
-    --color-accent-hover:    #1EBE58;
-    --color-accent-light:    #0D2E1A;   /* verde oscuro para badges sobre dark */
-    --color-accent-dark:     #4AE583;   /* verde claro para texto sobre dark */
+    /* Acento principal — Acid Mint */
+    --color-accent:          #B7FF72;
+    --color-accent-hover:    #A3F05A;
+    --color-accent-light:    #1F2E17;   /* verde oscuro para badges sobre dark */
+    --color-accent-dark:     #D4FFA8;   /* verde claro para texto sobre dark */
 
     /* Estados / Feedback */
     --color-error:           #E03E3E;
     --color-error-light:     #2A1010;
-    --color-success:         #25D366;
-    --color-success-light:   #0D2E1A;
+    --color-success:         #B7FF72;
+    --color-success-light:   #1F2E17;
     --color-warning:         #F5A623;
     --color-warning-light:   #2A1E08;
     --color-info:            #0EA5E9;
@@ -48,7 +48,7 @@
     --color-border:          rgba(240, 237, 230, 0.10);
     --color-border-medium:   rgba(240, 237, 230, 0.18);
     --color-border-strong:   rgba(240, 237, 230, 0.30);
-    --color-border-accent:   rgba(37, 211, 102, 0.30);
+    --color-border-accent:   rgba(183, 255, 114, 0.30);
 
 
     /* ──────────────────────────────────────────────────────
@@ -138,7 +138,7 @@
     --shadow-md:    0 4px 16px rgba(0, 0, 0, 0.30), 0 2px 6px rgba(0, 0, 0, 0.18);
     --shadow-lg:    0 10px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.20);
     --shadow-xl:    0 20px 60px rgba(0, 0, 0, 0.40), 0 8px 24px rgba(0, 0, 0, 0.25);
-    --shadow-accent: 0 8px 32px rgba(37, 211, 102, 0.28);
+    --shadow-accent: 0 8px 32px rgba(183, 255, 114, 0.28);
 
 
     /* ──────────────────────────────────────────────────────
@@ -170,7 +170,7 @@
 
 /* ──────────────────────────────────────────────────────────
    NOTA: prefers-color-scheme eliminado intencionalmente.
-   JVSoftware usa dark mode como identidad permanente.
+   Xion Technology usa dark mode como identidad permanente.
    El meta tag <meta name="color-scheme" content="dark">
    debe estar en el index.html para evitar flash blanco.
 ────────────────────────────────────────────────────────── */

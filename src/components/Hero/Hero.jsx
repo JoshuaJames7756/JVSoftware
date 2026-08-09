@@ -10,7 +10,7 @@ export default function Hero() {
     };
 
     return (
-        <section className={styles.hero} aria-label="Sección principal JVSoftware">
+        <section className={styles.hero} aria-label="Sección principal Xion Technology">
 
             {/* Fondo decorativo — puntos y gradiente sutil */}
             <div className={styles.bg} aria-hidden="true">

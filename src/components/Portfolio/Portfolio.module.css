@@ -17,8 +17,8 @@
 }
 
 .badgeDark {
-    background-color: rgba(37, 211, 102, 0.1);
-    border: 1px solid rgba(37, 211, 102, 0.2);
+    background-color: rgba(183, 255, 114, 0.1);
+    border: 1px solid rgba(183, 255, 114, 0.2);
     color: var(--color-accent);
     padding: var(--space-1) var(--space-4);
     border-radius: var(--radius-full);
@@ -38,7 +38,7 @@
 .titleAccent {
     color: var(--color-accent);
     /* Sutil resplandor en el texto acentuado */
-    text-shadow: 0 0 20px rgba(37, 211, 102, 0.3);
+    text-shadow: 0 0 20px rgba(183, 255, 114, 0.3);
 }
 
 .subtitle {
@@ -68,9 +68,9 @@
 
 .card:hover {
     transform: translateY(-8px);
-    border-color: rgba(37, 211, 102, 0.4);
+    border-color: rgba(183, 255, 114, 0.4);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
-                0 0 20px rgba(37, 211, 102, 0.1);
+                0 0 20px rgba(183, 255, 114, 0.1);
 }
 
 /* ── Imagen ── */
@@ -120,7 +120,7 @@
 
 /* ── Caja de Problema (Solución) ── */
 .problem {
-    background-color: rgba(37, 211, 102, 0.04);
+    background-color: rgba(183, 255, 114, 0.04);
     border-left: 3px solid var(--color-accent);
     padding: var(--space-4) var(--space-5);
     border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
@@ -160,7 +160,7 @@
 }
 
 .card:hover .tag {
-    border-color: rgba(37, 211, 102, 0.3);
+    border-color: rgba(183, 255, 114, 0.3);
     color: var(--color-accent);
 }
 

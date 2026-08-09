@@ -1,6 +1,6 @@
 // ============================================================
 //  Footer.jsx — Pie de página
-//  JVSoftware — Protocolo 4.2 (Premium & Branded)
+//  Xion Technology — Protocolo 4.2 (Premium & Branded)
 // ============================================================
 
 import styles from './Footer.module.css';
@@ -54,7 +54,7 @@ export default function Footer() {
                         <div className={styles.logoWrapper}>
                             <img
                                 src="/logo.png"
-                                alt="JVSoftware Logo"
+                                alt="Xion Technology Logo"
                                 className={styles.logoImg}
                                 width="44"
                                 height="44"
@@ -62,7 +62,7 @@ export default function Footer() {
                             />
                         </div>
                         <div className={styles.brandText}>
-                            <span className={styles.brandName}>JVSoftware</span>
+                            <span className={styles.brandName}>Xion Technology</span>
                             <span className={styles.brandTagline}>
                                 Sistemas que hacen crecer tu negocio
                             </span>
@@ -123,7 +123,7 @@ export default function Footer() {
 
                 <div className={styles.bottom}>
                     <p className={styles.copy}>
-                        © {YEAR} JVSoftware. Hecho con ☕ y código limpio en Bolivia.
+                        © {YEAR} Xion Technology. Hecho con ☕ y código limpio en Bolivia.
                     </p>
                     <div className={styles.legal}>
                         <span className={styles.credit}>Estrategia y Desarrollo Premium</span>

@@ -13,7 +13,7 @@ import Footer    from '../../components/Footer/Footer';
 export default function Home() {
     // SEO dinámico básico
     useEffect(() => {
-        document.title = 'JVSoftware — Sistemas digitales que hacen crecer tu negocio';
+        document.title = 'Xion Technology — Sistemas digitales que hacen crecer tu negocio';
         const desc = document.querySelector('meta[name="description"]');
         if (desc) {
             desc.setAttribute('content',

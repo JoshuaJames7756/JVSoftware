@@ -35,7 +35,7 @@
     right: -5%;
     width: 60vw;
     height: 60vw;
-    background: radial-gradient(circle, rgba(37, 211, 102, 0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(183, 255, 114, 0.06) 0%, transparent 70%);
     border-radius: 50%;
     filter: blur(60px);
 }
@@ -84,9 +84,9 @@
 }
 
 @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); }
-    70%  { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    0%   { box-shadow: 0 0 0 0 rgba(183, 255, 114, 0.4); }
+    70%  { box-shadow: 0 0 0 10px rgba(183, 255, 114, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(183, 255, 114, 0); }
 }
 
 .heading {

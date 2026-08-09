@@ -65,7 +65,7 @@ const SERVICES = [
 
 // Colores ajustados para Dark Mode con opacidades sutiles
 const COLOR_MAP = {
-    green:  { glow: 'rgba(37, 211, 102, 0.15)', border: 'rgba(37, 211, 102, 0.3)',  icon: '#25D366' },
+    green:  { glow: 'rgba(183, 255, 114, 0.15)', border: 'rgba(183, 255, 114, 0.3)', icon: '#B7FF72' },
     teal:   { glow: 'rgba(20, 184, 166, 0.15)', border: 'rgba(20, 184, 166, 0.3)',  icon: '#14b8a6' },
     amber:  { glow: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)',  icon: '#f59e0b' },
     purple: { glow: 'rgba(168, 85, 247, 0.15)', border: 'rgba(168, 85, 247, 0.3)',  icon: '#a855f7' },

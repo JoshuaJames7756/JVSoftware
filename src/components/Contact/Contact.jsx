@@ -1,6 +1,6 @@
 // ============================================================
 //   Contact.jsx — Formulario de contacto
-//   JVSoftware — Protocolo 4.2 (Business Oriented)
+//   Xion Technology — Protocolo 4.2 (Business Oriented)
 //   Optimización: Dark Mode & Select UX
 // ============================================================
 
@@ -100,8 +100,8 @@ export default function Contact() {
                             ].map((b, i) => (
                                 <li key={i} className={styles.benefit}>
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                        <circle cx="12" cy="12" r="10" fill="var(--color-accent-soft, #25D36622)" />
-                                        <path d="M8 12l3 3 5-5" stroke="var(--color-accent, #25D366)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <circle cx="12" cy="12" r="10" fill="var(--color-accent-soft, #B7FF7222)" />
+                                        <path d="M8 12l3 3 5-5" stroke="var(--color-accent, #B7FF72)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                     {b}
                                 </li>

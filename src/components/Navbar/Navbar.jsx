@@ -80,18 +80,18 @@ export default function Navbar() {
             <header className={`${styles.navbar} ${scrolled ? styles.scrolled : ''} ${menuOpen ? styles.menuAbove : ''}`}>
                 <nav className={`${styles.inner} container`} aria-label="Navegación principal">
 
-                    <Link to="/" className={styles.logo} aria-label="JVSoftware — inicio">
+                    <Link to="/" className={styles.logo} aria-label="Xion Technology — inicio">
                         <div className={styles.logoWrapper}>
                             <img
                                 src="/logo.png"
-                                alt="JVSoftware"
+                                alt="Xion Technology"
                                 className={styles.logoImg}
                                 height="48"
                                 width="48"
                                 loading="eager"
                             />
                         </div>
-                        <span className={styles.logoText}>JVSoftware</span>
+                        <span className={styles.logoText}>Xion Technology</span>
                     </Link>
 
                     <ul className={styles.links} role="list">

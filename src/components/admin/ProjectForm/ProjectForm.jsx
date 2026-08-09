@@ -1,6 +1,6 @@
 // ============================================================
 //  ProjectForm.jsx — Gestión Integral de Portafolio
-//  JVSoftware — Sistema de Control de Proyectos
+//  Xion Technology — Sistema de Control de Proyectos
 // ============================================================
 
 import { useState, useEffect, useCallback } from 'react';
@@ -32,9 +32,9 @@ export default function ProjectForm() {
 
     // --- MEJORA: Generador de imagen fallback ---
     const getPlaceholderUrl = (text) => {
-        const bg = "151515"; // Fondo oscuro JV
-        const color = "25D366"; // Verde acento
-        return `https://placehold.co/800x450/${bg}/${color}?text=${encodeURIComponent(text || 'JVSoftware')}`;
+        const bg = "18251D"; // Fondo Forest Graphite — Xion
+        const color = "B7FF72"; // Acid Mint — acento
+        return `https://placehold.co/800x450/${bg}/${color}?text=${encodeURIComponent(text || 'Xion Technology')}`;
     };
 
     const fetchProjects = useCallback(async () => {

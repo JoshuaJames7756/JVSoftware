@@ -1,6 +1,6 @@
 // ============================================================
 //  pages/Admin/index.jsx — Dashboard Maestro
-//  JVSoftware — Protocolo 4.2 (Admin Edition)
+//  Xion Technology — Protocolo 4.2 (Admin Edition)
 // ============================================================
 
 import { useState } from 'react';
@@ -23,7 +23,7 @@ export default function Admin() {
         return (
             <div className={styles.loading} role="status" aria-live="polite">
                 <div className={styles.spinner} aria-hidden="true" />
-                <p className={styles.loadingText}>Sincronizando con JVSoftware…</p>
+                <p className={styles.loadingText}>Sincronizando con Xion Technology…</p>
             </div>
         );
     }
@@ -47,12 +47,12 @@ export default function Admin() {
                         <div className={styles.logoWrapper}>
                             <img 
                                 src="/logo.png" 
-                                alt="JV Logo" 
+                                alt="Xion Logo" 
                                 className={styles.logoImg} 
                             />
                         </div>
                         <div className={styles.brandInfo}>
-                            <h1 className={styles.brandName}>JVSoftware</h1>
+                            <h1 className={styles.brandName}>Xion Technology</h1>
                             <p className={styles.brandSub}>Panel de Control Maestro</p>
                         </div>
                     </div>

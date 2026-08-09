@@ -1,5 +1,5 @@
 /* ============================================================
-   ProjectForm.module.css — JVSoftware (Cochabamba, Bolivia)
+   ProjectForm.module.css — Xion Technology (Cochabamba, Bolivia)
    Arquitectura: Premium Dark Mode & Responsive Admin
    ============================================================ */
 
@@ -16,7 +16,7 @@
 .formHeader {
     margin: 0 auto 2rem auto;
     max-width: 800px; /* Alineado con el ancho del formulario */
-    border-left: 4px solid #25D366;
+    border-left: 4px solid #B7FF72;
     padding-left: 1rem;
 }
 
@@ -81,8 +81,8 @@
 
 .input:focus, .textarea:focus {
     outline: none;
-    border-color: #25D366;
-    box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.1);
+    border-color: #B7FF72;
+    box-shadow: 0 0 0 2px rgba(183, 255, 114, 0.1);
 }
 
 .textarea { 
@@ -102,7 +102,7 @@
 }
 
 .fileLabel { 
-    background: #25D366; 
+    background: #B7FF72; 
     color: #000000; 
     padding: 10px 20px; 
     border-radius: 8px; 
@@ -115,7 +115,7 @@
 
 .fileLabel:hover { 
     transform: scale(1.02);
-    background: #20ba5a;
+    background: #a3f05a;
 }
 
 .miniPreview { 
@@ -146,7 +146,7 @@
 }
 
 .saveBtn:hover { 
-    background: #25D366; 
+    background: #B7FF72; 
 }
 
 .cancelBtn { 
@@ -170,7 +170,7 @@
     margin-bottom: 2rem; 
     font-size: 1.4rem; 
     font-weight: 700;
-    color: #25D366; 
+    color: #B7FF72; 
     text-align: center; /* Centrado para balancear la vista */
 }
 
@@ -198,7 +198,7 @@
 }
 
 .card:hover { 
-    border-color: #25D366; 
+    border-color: #B7FF72; 
     transform: translateY(-8px);
     box-shadow: 0 15px 40px rgba(0,0,0,0.6);
 }
@@ -221,7 +221,7 @@
     top: 15px; 
     right: 15px; 
     background: rgba(0,0,0,0.85); 
-    color: #25D366; 
+    color: #B7FF72; 
     padding: 4px 10px; 
     border-radius: 6px; 
     font-size: 11px; 
@@ -285,5 +285,5 @@
 }
 
 /* Estados de Mensaje */
-.success { color: #25D366; text-align: center; font-size: 0.9rem; margin-top: 1rem; font-weight: 600; }
+.success { color: #B7FF72; text-align: center; font-size: 0.9rem; margin-top: 1rem; font-weight: 600; }
 .error { color: #ff4444; text-align: center; font-size: 0.9rem; margin-top: 1rem; font-weight: 600; }

@@ -26,7 +26,7 @@ function ProjectCard({ project }) {
                     className={styles.image}
                     loading="lazy"
                     onError={(e) => {
-                        e.target.src = `https://placehold.co/600x360/1a1a1a/25D366?text=${encodeURIComponent(titulo)}`;
+                        e.target.src = `https://placehold.co/600x360/18251D/B7FF72?text=${encodeURIComponent(titulo)}`;
                     }}
                 />
                 <div className={styles.imageOverlay} aria-hidden="true" />
