@@ -1,7 +1,7 @@
 // ============================================================
 //  lib/db.js — Cliente de base de datos Neon
 //  SOLO usar en archivos dentro de /api — NUNCA en /src
-//  JVSoftware — Protocolo 4.2
+//  XionTech — Protocolo 4.2
 // ============================================================
 
 import { neon } from '@neondatabase/serverless';

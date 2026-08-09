@@ -3,7 +3,7 @@
 //  Solo para uso en el FRONTEND (/src)
 //  La subida real ocurre directo desde el browser a Cloudinary
 //  (unsigned preset) — nunca pasa por las Serverless Functions
-//  JVSoftware — Protocolo 4.2
+//  XionTech — Protocolo 4.2
 // ============================================================
 
 const CLOUD_NAME    = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;

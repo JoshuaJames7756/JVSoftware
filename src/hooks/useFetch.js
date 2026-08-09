@@ -1,6 +1,6 @@
 // ============================================================
 //  hooks/useFetch.js — Hook genérico para fetch de datos
-//  JVSoftware — Protocolo 4.2
+//  XionTech — Protocolo 4.2
 //
 //  USO:
 //    const { data, loading, error, refetch } = useFetch('/api/projects');

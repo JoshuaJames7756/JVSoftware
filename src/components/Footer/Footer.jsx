@@ -24,7 +24,7 @@ const SOCIAL = [
     },
     { 
         label: 'Instagram', 
-        href: 'https://www.instagram.com/_jvsoftware_/',
+        href: 'https://www.instagram.com/_xiontech_/',
         // Icono SVG de Instagram
         icon: (
             <>

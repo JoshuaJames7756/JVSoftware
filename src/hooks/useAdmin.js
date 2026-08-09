@@ -1,6 +1,6 @@
 // ============================================================
 //  hooks/useAdmin.js — Hook para operaciones autenticadas
-//  JVSoftware — Protocolo 4.2
+//  XionTech — Protocolo 4.2
 //
 //  Envuelve fetch con el token de Clerk automáticamente.
 //

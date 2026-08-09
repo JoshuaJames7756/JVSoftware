@@ -2,7 +2,7 @@
 //  /api/upload.js — Firma de subida para Cloudinary (signed)
 //  Genera una firma HMAC-SHA1 válida para uploads seguros.
 //  Requiere auth Clerk — solo admins pueden subir imágenes.
-//  JVSoftware — Protocolo 4.2
+//  XionTech — Protocolo 4.2
 // ============================================================
 
 import crypto from 'crypto';

@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /admin/
-Sitemap: https://jvsoftware-seven.vercel.app/sitemap.xml
+Sitemap: https://xiontech-seven.vercel.app/sitemap.xml
